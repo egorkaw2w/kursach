@@ -1,0 +1,25 @@
+@import url("../../app/globals.css");
+
+header{
+    background-color: var(--background);
+    height: 80px;
+    position: relative;
+    box-shadow: 0px 25px 30px 10px var(--background);
+
+
+    z-index: 1;
+    .logo{
+        position: relative;
+        left: 10px;
+        top:10px;
+        width: 30vw;
+        height: 10vw;
+        max-width: 240px;
+        max-height: 50px;
+        min-width: 150px;
+        min-height: 40px;
+    }
+    .loca-date-item{
+        font-size: 16px;
+    }
+}

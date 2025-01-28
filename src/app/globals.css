@@ -1,18 +1,48 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* #region Fonts*/
+@font-face {
+  font-family: 'CormorantSC';
+  src: url('../../fonts/CormorantSC-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: 'CormorantSC';
+  src: url('../../fonts/CormorantSC-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CormorantSC';
+  src: url('../../fonts/CormorantSC-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CormorantSC';
+  src: url('../../fonts/CormorantSC-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+
+/* #endregion */
+
+*{
+  font-family: "CormorantSC",sans-serif ;
+}
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111822;
+  --foreground: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+
 
 body {
   color: var(--foreground);
