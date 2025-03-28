@@ -1,0 +1,57 @@
+.action-button {
+    position: relative;
+    cursor: pointer;
+    width: 270px;
+    height: 270px;
+    padding: 0;
+    overflow: hidden; 
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: filter 0.3s ease; 
+    }
+
+    &:hover img {
+        filter: brightness(50%); 
+    }
+
+
+    &::before {
+        content: var(--img-hover);
+        position: absolute;
+        bottom: -100%; 
+        left: 25%;
+        width: 50%;
+        height: 60%; 
+        transition: bottom  0.3s ease; 
+        z-index: 1;
+    }
+
+
+    &::after {
+        content: var(--button-text);
+        position: absolute;
+        top: -100%; 
+        left: 0;
+        width: 100%;
+        height: 25%; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 26px;
+        transition: top  0.3s ease; 
+        z-index: 1;
+    }
+
+    &:hover::before {
+        bottom: 20; 
+
+    }
+
+    &:hover::after {
+        top: 20; 
+    }
+}

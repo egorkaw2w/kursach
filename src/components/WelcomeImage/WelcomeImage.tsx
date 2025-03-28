@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/WelcomeImage.css";
+import "./WelcomeImage.scss";
 
 const WelcomeImage = () => {
   return (

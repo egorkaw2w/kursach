@@ -1,0 +1,29 @@
+.button-area {
+    position: relative;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+  
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ensures the image fits nicely */
+    }
+  
+    &::after {
+      content: var(--img-hover); /* Uses the hover image from the CSS variable */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0; /* Hidden by default */
+      transition: opacity 0.3s ease; /* Smooth fade effect */
+    }
+  
+    &:hover::after {
+      opacity: 1; /* Shows the hover image */
+    }
+  }
