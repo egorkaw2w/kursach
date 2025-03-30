@@ -1,5 +1,7 @@
 import React from "react";
 import "./WelcomeImage.scss";
+import Link from "next/link";
+
 
 const WelcomeImage = () => {
   return (
@@ -8,10 +10,10 @@ const WelcomeImage = () => {
         <div className="flex container mx-auto my-11 flex-col justify-end">
           <nav className="w-2/3 flex p-0 justify-center mx-auto">
             <ul className="Welcome-items flex justify-between p-0 items-center gap-10 ">
-              <li className="Welcome-item  px-11 py-3 ">Доставка</li>
-              <li className="Welcome-item  px-11 py-3 ">Меню</li>
-              <li className="Welcome-item  px-11 py-3 ">Зал</li>
-              <li className="Welcome-item  px-11 py-3 ">Мероприятия</li>
+              <li className="Welcome-item  px-11 py-3 "><Link href="">Доставка</Link></li>
+              <li className="Welcome-item  px-11 py-3 "><Link href="/Menu">Меню</Link></li>
+              <li className="Welcome-item  px-11 py-3 "><Link href="">Зал</Link></li>
+              <li className="Welcome-item  px-11 py-3 "><Link href="">Мероприятия</Link></li>
             </ul>
           </nav>
           <div className="date-info flex justify-center flex-col items-center mt-6">

@@ -1,0 +1,13 @@
+.tel,.mail{
+    font-size: 28px;
+    color: white;
+    position: relative;
+}
+.tel::before{
+    content: "тел: ";
+    font-size: 24px;
+}
+.mail::before{
+    content: "почта: ";
+    font-size: 24px;
+}
