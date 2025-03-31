@@ -1,3 +1,4 @@
+// CategoryPage.tsx
 "use client";
 
 import { useParams } from "next/navigation";
@@ -65,8 +66,7 @@ export default function CategoryPage() {
 
   return (
     <div className="Category">
-      <Header />
-      <div className="CategoryList">
+      <div className="CategoryList mt-10 container mx-auto">
         <h1 className="text-3xl font-bold mb-6">
           {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
         </h1>
@@ -83,7 +83,6 @@ export default function CategoryPage() {
           ))}
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

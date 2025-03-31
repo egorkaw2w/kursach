@@ -2,6 +2,7 @@ import React from "react";
 import BurgerIco from "@assets/icons/BurgerIco";
 import Logo from "@assets/icons/Logo";
 import "../css/Header.css"
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -14,9 +15,9 @@ const Header = () => {
             </button>
           </div>
 
-          <div className=" flex justify-center items-end flex-1 ">
+          <Link href={'/'} className=" flex justify-center items-end flex-1 ">
             <Logo className="logo p-"/>
-          </div>
+          </Link>
 
           <div className="hidden md:flex flex-col justify-start  items-start s">
             <div className=" loca-date-item p-0 m-0">ru</div>

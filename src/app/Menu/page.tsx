@@ -4,9 +4,7 @@ import MenuCollection from "@components/Menu/MenuCollection/MenuCollection";
 
 const Menu = () => {
   return <div className="Menu">
-    <Header/>
     <MenuCollection/>
-    <Footer/>
   </div>;
 };
 
