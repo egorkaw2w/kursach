@@ -14,9 +14,10 @@ const MenuItem = ({ ItemText, ItemImage, ItemLinkTo, className }: MenuItemProps)
   const categoryUrl = `/Menu/${encodeURIComponent(ItemText.toLowerCase())}`;
 
   return (
+    
     <Link
-      href={categoryUrl}
-      className={`Linka menuItem ${className}`}
+      href={ItemLinkTo}
+      className={`Linka menuItem  ${className}`}
       style={{ "--textOverlay": `"${ItemText}"` } as React.CSSProperties}
     >
       <img src={ItemImage} alt={ItemText} className="w-full h-full object-cover" />

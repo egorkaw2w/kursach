@@ -57,9 +57,7 @@ export default function CategoryPage() {
   if (!category) {
     return (
       <div className="Category">
-        <Header />
         <div className="CategoryList">Категория не найдена</div>
-        <Footer />
       </div>
     );
   }
