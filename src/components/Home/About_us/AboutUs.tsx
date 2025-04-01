@@ -1,5 +1,4 @@
 
-import ButtonArea from "@components/ActionButton/Home/ButtonArea/ButtonArea";
 import "./AboutUs.scss"
 const AboutUs = () =>{
 

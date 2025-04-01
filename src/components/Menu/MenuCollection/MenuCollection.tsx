@@ -6,20 +6,20 @@ const MenuCollection = () => {
   return (
 <div className="MenuCollection">
       <div className="container mx-auto    grid-cols-4 grid-rows-2 gap-5 mt-11 max-w-4xl hidden md:grid">
-        <MenuItem ItemImage="usable_img/MenuImga1.png" ItemText="Закуски" ItemLinkTo="/Menu/zakuski" />
-        <MenuItem ItemImage="usable_img/MenuImga2.png" ItemText="Десерты" ItemLinkTo="/Menu/deserty" className="row-span-2" />
-        <MenuItem ItemImage="usable_img/MenuImga3.png" ItemText="Горячие блюда" ItemLinkTo="/Menu/goryachie-blyuda" className="row-span-2" />
-        <MenuItem ItemImage="usable_img/MenuImga4.png" ItemText="Завтраки" ItemLinkTo="/Menu/zavtraki" />
-        <MenuItem ItemImage="usable_img/MenuImga5.png" ItemText="Винная карта" ItemLinkTo="/Menu/vinnaya-karta" />
-        <MenuItem ItemImage="usable_img/MenuImga6.png" ItemText="Барная карта" ItemLinkTo="/Menu/barnaya-karta" />
+      <MenuItem ItemImage="usable_img/MenuImga1.png" ItemText="Закуски" ItemLinkTo="/Menu/закуски" />
+      <MenuItem ItemImage="usable_img/MenuImga3.png" ItemText="Горячие блюда" ItemLinkTo="/Menu/горячие блюда" className="row-span-2" />
+      <MenuItem ItemImage="usable_img/MenuImga4.png" ItemText="Завтраки" ItemLinkTo="/Menu/завтраки" className="row-span-2"/>
+      <MenuItem ItemImage="usable_img/MenuImga5.png" ItemText="Винная карта" ItemLinkTo="/Menu/Винная карта" />
+      <MenuItem ItemImage="usable_img/MenuImga2.png" ItemText="Десерты" ItemLinkTo="/Menu/десерты"  />
+      <MenuItem ItemImage="usable_img/MenuImga6.png" ItemText="Барная карта" ItemLinkTo="/Menu/Барная карта" />
       </div>
       <div className="container mx-auto md:hidden flex flex-col gap-5 mt-11 ">
-        <MenuItemMobile ItemText="Закуски" ItemLinkTo="/Menu/zakusk"/>
-        <MenuItemMobile ItemText="Десерты" ItemLinkTo="/Menu/deserty"/>
-        <MenuItemMobile ItemText="Горячие блюда" ItemLinkTo="/Menu/goryachie-blyuda"/>
-        <MenuItemMobile ItemText="Завтраки" ItemLinkTo="/Menu/zavtraki"/>
-        <MenuItemMobile ItemText="Винная карта" ItemLinkTo="/Menu/vinnaya-karta"/>
-        <MenuItemMobile ItemText="Барная карта" ItemLinkTo="/Menu/barnaya-karta"/>
+        <MenuItemMobile ItemText="Закуски" ItemLinkTo="/Menu/закуски"/>
+        <MenuItemMobile ItemText="Десерты" ItemLinkTo="/Menu/Десерты"/>
+        <MenuItemMobile ItemText="Горячие блюда" ItemLinkTo="/Menu/горячие блюда"/>
+        <MenuItemMobile ItemText="Завтраки" ItemLinkTo="/Menu/завтраки"/>
+        <MenuItemMobile ItemText="Винная карта" ItemLinkTo="/Menu/винная карта"/>
+        <MenuItemMobile ItemText="Барная карта" ItemLinkTo="/Menu/барная карта"/>
       </div>
 </div>
   );

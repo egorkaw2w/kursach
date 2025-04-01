@@ -1,0 +1,59 @@
+.Burger {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #111822;
+    display: grid;
+    grid-template-rows: minmax(100px, auto) 1fr minmax(200px, auto);
+    padding: 20px;
+    z-index: 1000;
+  }
+  
+  .Burger__footer {
+    align-self: flex-end; /* Для нижнего позиционирования */
+  }
+  
+  .Burger-action-button {
+    border: 1px solid #ffffff;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    padding: 10px 20px;
+  
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.699);
+      background-color: rgba(255, 255, 255, 0.699);
+      color: black;
+    }
+  }
+  
+  .Burger__Contact-info-dark {
+    color: #FFFFFF70;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .Burger__link {
+    font-size: 24px;
+    position: relative;
+    width: fit-content;
+    transition: color 0.3s;
+    margin-bottom: 15px;
+  
+    &::after {
+      content: '';
+      position: absolute;
+      background: #ffffff;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      transition: width 0.3s ease-out;
+    }
+  
+    &:hover::after {
+      width: 100%;
+    }
+  }
+  
