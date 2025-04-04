@@ -18,7 +18,7 @@ const Login = () => {
           <p>Нет аккаунта? <Link href = "./Register">
           Зарегистрируйся!</Link></p>
         </div>
-        <button className="Login-btn px-10 ">Авторизоваться</button>
+        <button className="Login-btn px-10 py-2">Авторизоваться</button>
       </div>
     </main>
   );

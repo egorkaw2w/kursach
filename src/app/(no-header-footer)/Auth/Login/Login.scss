@@ -9,7 +9,7 @@
     font-size: 26px;
 }
 
-}
+
 .LoginArea {
   display: flex;
   flex-direction: column;
@@ -52,9 +52,10 @@
 .Login-btn{
 
     border: 1px solid #ffffff;
-    border-radius: 10px;
+    border-radius: 15px;
     width: fit-content;
     transition: 0.5s;
+    font-size: 24px;
 
     &:hover{
         transition: 0.5s;
@@ -73,4 +74,5 @@
          color: #ffd4c0;   
         }
     }
+}
 }

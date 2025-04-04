@@ -40,8 +40,10 @@ const Header = ({className}:HeaderProps) => {
             <Logo className="logo" />
           </Link>
           <div className="hidden md:flex flex-col justify-start items-start">
-            <div className="loca-date-item p-0 m-0">ru</div>
-            <div className="loca-date-item p-0 m-0">адрес: место, город</div>
+<Link href="/Auth/Login">
+              <button className="loca-date-item p-0 m-0">Авторизоваться </button>
+  
+</Link>            <div className="loca-date-item p-0 m-0">адрес: место, город</div>
           </div>
         </div>
       </div>
