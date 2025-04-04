@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+.booking-day {
+  font-family: 'Inter', sans-serif;
+  color: white;
+  padding: 20px;
+  background: #1a1a2e;
+  border-radius: 12px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.datePickingArea {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+.DatePicking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arrow,
+.arrow-reverse {
+  width: 40px;
+  height: 40px;
+  background: #4a4a6a;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.arrow::before {
+  content: '↑';
+  font-size: 24px;
+  color: white;
+}
+
+.arrow-reverse::before {
+  content: '↓';
+  font-size: 24px;
+  color: white;
+}
+
+.Calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.Calendar__item {
+  background: #4a4a6a;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.Calendar__item:hover {
+  background: #5b5b8a;
+}
+
+.Calendar__item.selected {
+  background: #ff6b6b; /* Подсветка выбранной даты */
+}
+
+.TimePicking {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.Time_item {
+  background: #4a4a6a;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.Time_item:hover {
+  background: #5b5b8a;
+}
+
+.Time_item.selected {
+  background: #ff6b6b; /* Подсветка выбранного времени */
+}
+
+.Time_item.booked {
+  background: #666; /* Серый цвет для забронированных слотов */
+  cursor: not-allowed;
+  opacity: 0.6;
+}

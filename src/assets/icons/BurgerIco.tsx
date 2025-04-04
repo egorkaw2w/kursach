@@ -17,10 +17,12 @@ const BurgerIco = ({className, typeOfBurger}:Props)  => {
     }
     else{
         return(
-<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect y="28.8001" width="40.7293" height="1.69705" rx="0.848527" transform="rotate(-45 0 28.8001)" fill="#777777"/>
-<rect x="1.20004" width="40.7293" height="1.69705" rx="0.848527" transform="rotate(45 1.20004 0)" fill="#777777"/>
+<svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.47623 1L21.4762 21" stroke="#777777" stroke-width="2" stroke-linecap="round"/>
+<path d="M1 21L21 1" stroke="#777777" stroke-width="2" stroke-linecap="round"/>
 </svg>
+
+
 
 
 

@@ -16,7 +16,7 @@ const MenuItem = ({ ItemText, ItemImage, ItemLinkTo, className }: MenuItemProps)
   return (
     
     <Link
-      href={ItemLinkTo}
+      href={categoryUrl}
       className={`Linka menuItem  ${className}`}
       style={{ "--textOverlay": `"${ItemText}"` } as React.CSSProperties}
     >

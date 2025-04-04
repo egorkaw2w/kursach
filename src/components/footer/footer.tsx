@@ -2,9 +2,14 @@
 import "./footer.scss";
 import Logo from "@assets/icons/Logo";
 
-const Footer = () => {
+
+type FooterProps = {
+  className?: string
+}
+
+const Footer = ({className}:FooterProps) => {
   return (
-    <div className="footer flex flex-col items-center   container  mx-auto mt-24">
+    <div className={`footer flex flex-col items-center   container  mx-auto mt-24 ${className}`}>
       <div className="RestLogo ">
         <Logo />
         </div>

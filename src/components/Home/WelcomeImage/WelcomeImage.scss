@@ -1,26 +1,77 @@
-.background{
-    background-image: url("/usable_img/WelcomeImageBack.jpg");
-    height: 90vh;
-    background-size: cover;
-    position: relative;
-    z-index: 0;
+.background {
+  background-image: url("/usable_img/WelcomeImageBack.jpg");
+  height: 90vh;
+  background-size: cover;
+  position: relative;
+  z-index: 0;
 
-    .Welcome-items{
-        display: flex;
-        justify-content: space-between;
+  .Welcome-items {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-    .Welcome-item{
-        border: 1px solid #ffffff;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: 0.3s;
+  .Welcome-item {
+    /* Оставляем только минимальные стили для li */
+    margin: 0;
+    padding: 0;
+  }
 
-        &:hover{
-            transition: 0.5s;
-            border: 1px solid rgba(255, 255, 255, 0.699);
-            background-color: rgba(255, 255, 255, 0.699);
-            color: black;
-        }
-    }
-    }
+  .Welcome-link,
+  .Welcome-button {
+    /* Переносим стили с Welcome-item сюда */
+    display: block; /* Растягиваем на всю площадь li */
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ffffff;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    text-decoration: none;
+    color: white; /* Цвет текста */
+    background: transparent; /* Прозрачный фон по умолчанию */
+  }
+
+  .Welcome-link:hover,
+  .Welcome-button:hover {
+    transition: 0.5s;
+    border: 1px solid rgba(255, 255, 255, 0.699);
+    background-color: rgba(255, 255, 255, 0.699);
+    color: black;
+  }
+
+  .Welcome-button {
+    border: none; /* Убираем стандартный border у button */
+  }
+}
+
+/* Стили для остального */
+.date-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.date-of-day-info,
+.time-open {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ff6b6b;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 1000;
 }

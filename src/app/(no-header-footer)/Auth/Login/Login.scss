@@ -1,0 +1,76 @@
+.Login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #1a1a2e; /* Темный фон, если у тебя тёмная тема */
+.title{
+    font-size: 26px;
+}
+
+}
+.LoginArea {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+
+  input {
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 10px 0;
+    color: white;
+    font-size: 16px;
+  }
+
+  input::placeholder {
+    color: #aaa;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: white;
+    bottom: 0;
+    left: 0;
+    transition: background 0.3s ease;
+  }
+
+
+}
+.Login-btn{
+
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    width: fit-content;
+    transition: 0.5s;
+
+    &:hover{
+        transition: 0.5s;
+        background-color: rgba(255, 255, 255, 0.26);
+        border:1px solid rgba(0, 0, 0, 0.445);
+    }
+    &:active{
+        background-color: white;
+        color: black;
+    }
+}
+.ToAuth{
+    a{
+        color: #F3B699;
+        &:hover{
+         color: #ffd4c0;   
+        }
+    }
+}
