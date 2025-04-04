@@ -1,0 +1,60 @@
+.Event-item {
+  width: 100%;
+  height: 300px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+
+  .imgArea {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit:cover;
+    }
+  }
+
+  .InfoArea {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding: 10px;
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .eventDiscription {
+      font-size: 1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.EventCollectionList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.leaveMail{
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+    transition: 0.3s;
+    
+    &:hover{
+        transition: 0.3s;
+        background-color: #ffffff50;
+        border: 1px solid transparent;
+        box-shadow: 0px 0px 30px 10px rgba(131, 130, 130, 0.2);    }
+    }
+    .EventTitle{
+        font-size: 26px;
+        color: #F3B699;
+    }

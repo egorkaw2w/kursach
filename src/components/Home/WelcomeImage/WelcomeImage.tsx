@@ -33,7 +33,7 @@ const WelcomeImage: React.FC = () => {
                 </button>
               </li>
               <li className="Welcome-item">
-                <Link href="" className="Welcome-link px-11 py-3">
+                <Link href="/Events" className="Welcome-link px-11 py-3">
                   Мероприятия
                 </Link>
               </li>
