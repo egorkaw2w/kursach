@@ -1,18 +1,17 @@
-// CategoryPage.tsx
 "use client";
 
 import { useParams } from "next/navigation";
-import Header from "@components/header/Header";
-import Footer from "@components/footer/footer";
+import { useState } from "react";
 import CategoryPageItem from "@components/Menu/CategoryPageItem/CategoryPageItem";
+import FoodModal from "@components/Modal/FoodModal/FoodModal";
 
-// Используем те же данные, что и в MenuCollection
+// Тестовые данные
 const menuTestData = {
   category: [
     {
       name: "закуски",
       items: [
-        { id: 1, name: "закузка_1", description: "loremIpsum", cost: 9999.99, img: "usable_img/zakuska1.png" },
+        { id: 1, name: "закузка_1", description: "loremIpsum", cost: 9999.99, img: "/usable_img/MenuImga1.png" },
         { id: 2, name: "закузка_2", description: "loremIpsum", cost: 123.00, img: "usable_img/zakuska2.png" },
       ],
     },
@@ -46,13 +45,21 @@ export default function CategoryPage() {
   const params = useParams();
   const categoryName = params.categoryName as string;
 
-  // Декодируем параметр из URL
   const decodedCategoryName = decodeURIComponent(categoryName);
-
-  // Находим категорию по имени
   const category = menuTestData.category.find(
     (cat) => cat.name.toLowerCase() === decodedCategoryName.toLowerCase()
   );
+
+  // Состояние для модального окна
+  const [selectedFood, setSelectedFood] = useState<any>(null);
+
+  const openModal = (item: any) => {
+    setSelectedFood(item);
+  };
+
+  const closeModal = () => {
+    setSelectedFood(null);
+  };
 
   if (!category) {
     return (
@@ -77,10 +84,22 @@ export default function CategoryPage() {
               foodName={item.name}
               foodCost={item.cost.toFixed(2)}
               foodDesc={item.description}
+              onClick={() => openModal(item)} // Открываем модальное окно
             />
           ))}
         </div>
       </div>
+
+      {/* Модальное окно */}
+      {selectedFood && (
+        <FoodModal
+          FoodName={selectedFood.name}
+          FoodeDescription={selectedFood.description}
+          FoodImage={selectedFood.img}
+          FoodPrice={selectedFood.cost.toFixed(2)}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 }

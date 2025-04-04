@@ -1,0 +1,88 @@
+.FoodModal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.726); // Полупрозрачный фон
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.FoodModal-content {
+  background: rgba(0, 0, 0, 0.966);
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 1000px;
+  width: 100%;
+  height: 100%;
+  max-height: 500px;
+  position: relative;
+}
+
+.Food-item {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  .Close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .foodTitle {
+    h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+
+  .foodContent {
+
+    gap: 10px;
+
+    .foodImage {
+      img {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+    }
+
+    .foodDescription {
+      font-size: 1rem;
+    }
+  }
+
+  .foodFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .foodPrice {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .Order-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover {
+        background-color: #218838;
+      }
+    }
+  }
+}
