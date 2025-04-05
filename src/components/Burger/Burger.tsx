@@ -3,7 +3,6 @@ import Logo from "@assets/icons/Logo";
 import "./Burger.scss";
 import Link from "next/link";
 import BurgerIco from "@assets/icons/BurgerIco";
-import { useState } from "react";
 
 type BurgerNavigationItem = {
   id: number;

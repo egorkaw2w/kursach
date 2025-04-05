@@ -5,11 +5,11 @@ import "./MenuItem.scss";
 type MenuItemProps = {
   ItemText: string;
   ItemImage: string;
-  ItemLinkTo: string;
+  ItemLinkTo?: string;
   className?: string;
 };
 
-const MenuItem = ({ ItemText, ItemImage, ItemLinkTo, className }: MenuItemProps) => {
+const MenuItem = ({ ItemText, ItemImage, className }: MenuItemProps) => {
   // Формируем правильный URL для страницы категории
   const categoryUrl = `/Menu/${encodeURIComponent(ItemText.toLowerCase())}`;
 

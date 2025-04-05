@@ -51,9 +51,9 @@ export default function CategoryPage() {
   );
 
   // Состояние для модального окна
-  const [selectedFood, setSelectedFood] = useState<any>(null);
+  const [selectedFood, setSelectedFood] = useState<unknown>(null);
 
-  const openModal = (item: any) => {
+  const openModal = (item: unknown) => {
     setSelectedFood(item);
   };
 
