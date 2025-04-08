@@ -1,0 +1,46 @@
+.SideNavBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px; // Фиксированная ширина бокового меню
+  height: 100vh; // На всю высоту экрана
+  background: #2c3e50; // Тёмный фон
+  color: #fff;
+  padding-top: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; // Прокрутка, если элементов много
+
+  .SideNavBar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .SideNavBar-item {
+    margin-bottom: 10px;
+  }
+
+  .SideNavBar-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #fff;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #34495e; // Цвет при наведении
+    }
+
+    .SideNavBar-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 15px;
+      object-fit: contain;
+    }
+
+    .SideNavBar-name {
+      font-size: 1rem;
+    }
+  }
+}
