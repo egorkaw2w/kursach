@@ -60,3 +60,70 @@
   header .loca-date-item {
     font-size: 16px;
   }
+
+  // src/components/header/Header.scss
+
+// Стили для контейнера user-menu
+.user-menu {
+  position: relative;
+}
+
+// Стили для кнопки с именем пользователя
+.user-name {
+  @apply flex items-center ;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    @apply bg-gray-100 text-gray-900;
+  }
+
+  &:focus {
+    outline: none;
+    @apply ring-2 ring-blue-500 ring-opacity-50;
+  }
+}
+
+// Стили для выпадающего меню
+.dropdown {
+  background-color: #111822; 
+  @apply absolute top-full mt-2 right-0 w-48  rounded-lg shadow-lg z-50;
+  animation: dropdownFadeIn 0.2s ease-out;
+
+  // Скрываем меню, если оно не активно
+  &[hidden] {
+    display: none;
+  }
+}
+
+// Анимация появления меню
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Стили для пунктов меню
+.dropdown-item {
+  @apply block w-full text-left px-4 py-2  font-medium text-base;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    @apply bg-blue-50 text-blue-700;
+  }
+
+  &:focus {
+    outline: none;
+    @apply bg-blue-100 text-blue-800;
+  }
+}
+
+.loca-date-item {
+  transition: color 0.2s ease;
+}
