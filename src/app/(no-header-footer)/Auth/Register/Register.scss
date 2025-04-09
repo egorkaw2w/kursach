@@ -1,22 +1,60 @@
-.Register  {
+.Register {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   min-width: 100vw;
-  background: #1a1a2e; /* Темный фон, если у тебя тёмная тема */
-.title{
+  background: #1a1a2e; /* Тёмный фон */
+
+  .title {
     font-size: 26px;
+    color: #ffffff;
+  }
 }
 
-}
-.LoginArea {
+.RegisterArea {
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: 100%;
   max-width: 400px;
+}
+
+/* Стили для уведомлений */
+.notification {
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 16px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-in-out;
+
+  &.error {
+    background-color: #ff4d4d; /* Красный для ошибок */
+    color: #fff;
+    border: 1px solid #cc0000;
+  }
+
+  &.success {
+    background-color: #4caf50; /* Зелёный для успеха */
+    color: #fff;
+    border: 1px solid #388e3c;
+  }
+}
+
+/* Анимация появления уведомлений */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .input-wrapper {
@@ -39,37 +77,50 @@
     font-size: 18px;
   }
 }
-.Register-btn{
-    border: 1px solid #ffffff;
-    border-radius: 15px;
-    width: fit-content;
-    transition: 0.5s;
-    font-size: 24px;
 
-    &:hover{
-        transition: 0.5s;
-        background-color: rgba(255, 255, 255, 0.26);
-        border:1px solid rgba(0, 0, 0, 0.445);
-    }
-    &:active{
-        background-color: white;
-        color: black;
-    }
+.Register-btn {
+  border: 1px solid #ffffff;
+  border-radius: 15px;
+  width: fit-content;
+  transition: 0.5s;
+  font-size: 24px;
+  padding: 5px 20px;
+  background: transparent;
+  color: #ffffff;
+
+  &:hover {
+    transition: 0.5s;
+    background-color: rgba(255, 255, 255, 0.26);
+    border: 1px solid rgba(0, 0, 0, 0.445);
+  }
+
+  &:active {
+    background-color: white;
+    color: black;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
-.linkToLogin{
-    a{
-        color: #F3B699;
-        &:hover{
-         color: #ffd4c0;   
-        }
+
+.linkToLogin {
+  a {
+    color: #f3b699;
+    &:hover {
+      color: #ffd4c0;
     }
+  }
 }
-.passwordBox{
-    position: relative;
-    .ShpwPassword{
-        width: 10px;
-        height: 10px;
-        position: absolute;
-        right: 0;
-    }
+
+.passwordBox {
+  position: relative;
+
+  .ShpwPassword {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    right: 0;
+  }
 }
