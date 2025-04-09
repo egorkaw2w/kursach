@@ -1,8 +1,8 @@
 .SideNavBar {
-  position: fixed;
+  // position: fixed;
   top: 0;
   left: 0;
-  width: 250px; // Фиксированная ширина бокового меню
+  // width: 100%; // Фиксированная ширина бокового меню
   height: 100vh; // На всю высоту экрана
   background: #2c3e50; // Тёмный фон
   color: #fff;
@@ -43,4 +43,8 @@
       font-size: 1rem;
     }
   }
+}
+.exit{
+  background-color: rgb(78, 78, 78);
+  font-size: 20px;
 }

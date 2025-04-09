@@ -1,0 +1,26 @@
+.admin-table-item{
+    display: grid;
+}
+.grid-item{
+    &::placeholder{
+        color: black;
+
+    }
+
+}
+.ActionsBtnArea{
+    display: grid;
+}
+
+.ActionsBtnArea{
+.ChangeBtn{
+    background-color: rgba(190, 190, 29, 0.753);
+}
+.DeleteBtn{
+    background-color: rgba(177, 26, 26, 0.747);
+}
+}
+
+.Editable{
+        background-color: rgba(218, 209, 199, 0.5);
+}

@@ -1,0 +1,30 @@
+.Admimka{
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+    height: 100vh;
+    max-height: 100vh;
+}
+.Adminka-content{
+    background-color: white;
+    background-clip: content-box;
+    display: grid;
+    grid-template-rows: 1fr 9fr;
+}
+.Adminka-content__title{
+    color: black;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(158, 158, 158, 0.24);
+    font-size: 24px;
+}
+.Adminka-content__table{
+    border: 1px solid #000;
+    border-top: transparent;
+    color: #000;
+    overflow-x: scroll;
+}
+.admin-table-header{
+    display: grid;
+}
