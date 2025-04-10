@@ -6,6 +6,7 @@ import "./Login.scss";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "src/app/lib/AuthContext";
+
 const Login = () => {
   const [loginData, setLoginData] = useState({ login: "", password: "" });
   const [error, setError] = useState<string | null>(null);
@@ -46,8 +47,12 @@ const Login = () => {
       console.log("Response text:", responseText);
 
       if (response.ok) {
-        const data = JSON.parse(responseText).Data;
+        const parsedResponse = JSON.parse(responseText);
+        const data = parsedResponse.data; // Используем data с маленькой буквы
         console.log("Login successful, user data:", data);
+        if (!data || !data.id || !data.fullName) {
+          throw new Error("Неверный формат ответа от сервера");
+        }
         login({ fullName: data.fullName }, data.id);
         setTimeout(() => {
           console.log("Redirecting to / after login");
@@ -55,11 +60,11 @@ const Login = () => {
         }, 500);
       } else {
         const errorData = JSON.parse(responseText);
-        setError(errorData.Error || "Неверный логин или пароль!");
+        setError(errorData.error || "Неверный логин или пароль!");
       }
     } catch (err) {
       console.error("Fetch error:", err);
-      setError("Не удалось подключиться к серверу.");
+      setError("Не удалось подключиться к серверу или неверный формат ответа.");
     } finally {
       setLoading(false);
     }

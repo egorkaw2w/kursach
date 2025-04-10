@@ -14,7 +14,6 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    gender: "",
     DOB: "",
     mail: "",
     img: "",
@@ -45,17 +44,18 @@ const Profile = () => {
         console.log("Response text:", responseText);
 
         if (response.ok) {
-          const data = JSON.parse(responseText);
+          const parsedResponse = JSON.parse(responseText);
+          const data = parsedResponse.data; // Данные внутри data
           console.log("Profile data loaded:", data);
           setFormData({
             name: data.fullName || "",
-            gender: data.gender || "",
-            DOB: data.dob || "",
+            DOB: data.birthDate || "", // Используем birthDate вместо dob
             mail: data.email || "",
-            img: data.img || "",
+            img: data.avatarUrl || "", // Используем avatarUrl вместо img
           });
         } else {
-          setError("Не удалось загрузить данные профиля.");
+          const errorData = JSON.parse(responseText);
+          setError(errorData.error || "Не удалось загрузить данные профиля.");
         }
       } catch (err) {
         console.error("Fetch error:", err);
@@ -70,7 +70,7 @@ const Profile = () => {
     }
   }, [user, userId, isAuthReady]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -92,24 +92,24 @@ const Profile = () => {
         body: JSON.stringify({
           id: userId,
           fullName: formData.name,
-          gender: formData.gender,
-          DOB: formData.DOB,
+          birthDate: formData.DOB, // Используем birthDate
           email: formData.mail,
-          img: formData.img,
-          login: "", // Поля, которые не меняем
-          phone: "",
-          passwordHash: "",
-          createdAt: new Date().toISOString(),
+          avatarUrl: formData.img, // Используем avatarUrl
         }),
       });
+
+      console.log("Save response status:", response.status);
+      const responseText = await response.text();
+      console.log("Save response text:", responseText);
 
       if (response.ok) {
         setIsEditing(false);
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Не удалось обновить профиль.");
+        const errorData = JSON.parse(responseText);
+        setError(errorData.error || "Не удалось обновить профиль.");
       }
     } catch (err) {
+      console.error("Save error:", err);
       setError("Ошибка при сохранении данных.");
     }
   };
@@ -147,22 +147,6 @@ const Profile = () => {
       </div>
       <div className="Profile__data w-full md:w-3/4 mx-auto">
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <div className="gender flex justify-between items-center py-2">
-          <p className="font-medium">Пол</p>
-          {isEditing ? (
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleInputChange}
-              className="border rounded px-2 py-1 dark-input"
-            >
-              <option value="мужской">Мужской</option>
-              <option value="женский">Женский</option>
-            </select>
-          ) : (
-            <p>{formData.gender}</p>
-          )}
-        </div>
         <div className="DOB flex justify-between items-center py-2 my-4">
           <p className="font-medium">День рождения</p>
           {isEditing ? (

@@ -1,23 +1,18 @@
-// MenuItem.tsx
 import Link from "next/link";
 import "./MenuItem.scss";
 
 type MenuItemProps = {
   ItemText: string;
   ItemImage: string;
-  ItemLinkTo?: string;
+  ItemLinkTo: string; // Теперь обязательно
   className?: string;
 };
 
-const MenuItem = ({ ItemText, ItemImage, className }: MenuItemProps) => {
-  // Формируем правильный URL для страницы категории
-  const categoryUrl = `/Menu/${encodeURIComponent(ItemText.toLowerCase())}`;
-
+const MenuItem = ({ ItemText, ItemImage, ItemLinkTo, className }: MenuItemProps) => {
   return (
-    
     <Link
-      href={categoryUrl}
-      className={`Linka menuItem  ${className}`}
+      href={ItemLinkTo}
+      className={`Linka menuItem ${className}`}
       style={{ "--textOverlay": `"${ItemText}"` } as React.CSSProperties}
     >
       <img src={ItemImage} alt={ItemText} className="w-full h-full object-cover" />

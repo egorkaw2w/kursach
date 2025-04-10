@@ -1,59 +1,75 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CategoryPageItem from "@components/Menu/CategoryPageItem/CategoryPageItem";
 import FoodModal from "@components/Modal/FoodModal/FoodModal";
 
-// Тестовые данные
-const menuTestData = {
-  category: [
-    {
-      name: "закуски",
-      items: [
-        { id: 1, name: "закузка_1", description: "loremIpsum", cost: 9999.99, img: "/usable_img/MenuImga1.png" },
-        { id: 2, name: "закузка_2", description: "loremIpsum", cost: 123.00, img: "usable_img/zakuska2.png" },
-      ],
-    },
-    {
-      name: "винная карта",
-      items: [
-        { id: 1, name: "Вино DonPerenion", description: "loremIpsum", cost: 9999.99, img: "usable_img/wine1.png" },
-        { id: 2, name: "RussianVODKa", description: "loremIpsum", cost: 123.00, img: "usable_img/vodka1.png" },
-      ],
-    },
-    {
-      name: "десерты",
-      items: [{ id: 1, name: "Торт", description: "Вкусный торт", cost: 500.00, img: "usable_img/cake1.png" }],
-    },
-    {
-      name: "горячие блюда",
-      items: [{ id: 1, name: "Стейк", description: "Сочный стейк", cost: 1200.00, img: "usable_img/steak1.png" }],
-    },
-    {
-      name: "завтраки",
-      items: [{ id: 1, name: "Омлет", description: "С яйцами", cost: 300.00, img: "usable_img/omlet1.png" }],
-    },
-    {
-      name: "барная карта",
-      items: [{ id: 1, name: "Коктейль", description: "Освежающий", cost: 450.00, img: "usable_img/cocktail1.png" }],
-    },
-  ],
+type MenuItem = {
+  id: number;
+  categoryId: number; // Добавляем это поле
+  name: string;
+  description?: string;
+  price: number;
+  imageUrl?: string;
 };
 
 export default function CategoryPage() {
   const params = useParams();
   const categoryName = params.categoryName as string;
+  const decodedCategoryName = decodeURIComponent(categoryName).toLowerCase();
 
-  const decodedCategoryName = decodeURIComponent(categoryName);
-  const category = menuTestData.category.find(
-    (cat) => cat.name.toLowerCase() === decodedCategoryName.toLowerCase()
-  );
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [categoryDisplayName, setCategoryDisplayName] = useState<string>("");
+  const [selectedFood, setSelectedFood] = useState<MenuItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Состояние для модального окна
-  const [selectedFood, setSelectedFood] = useState<unknown>(null);
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      try {
+        // Шаг 1: Получаем категории, чтобы найти ID по slug
+        const categoriesRes = await fetch("http://localhost:5252/api/MenuCategories"); // Замени на свой URL API
+        if (!categoriesRes.ok) throw new Error("Ошибка загрузки категорий");
+        const categories = await categoriesRes.json();
 
-  const openModal = (item: unknown) => {
+        const category = categories.find(
+          (cat: { slug: string; name: string }) => cat.slug.toLowerCase() === decodedCategoryName
+        );
+
+        if (!category) {
+          setError("Категория не найдена");
+          setLoading(false);
+          return;
+        }
+
+        // Сохраняем отображаемое имя категории
+        setCategoryDisplayName(category.name);
+
+        // Шаг 2: Получаем блюда и фильтруем по categoryId
+        const itemsRes = await fetch("http://localhost:5252/api/MenuItems");
+        if (!itemsRes.ok) throw new Error("Ошибка загрузки блюд");
+        const items = await itemsRes.json();
+
+        const filteredItems = items.filter(
+          (item: MenuItem) => item.categoryId === category.id
+        );
+
+        setMenuItems(filteredItems);
+        setLoading(false);
+      } catch (err) {
+        console.error("Ошибка:", err);
+        setError("Не удалось загрузить данные. Попробуйте позже.");
+        setLoading(false);
+      }
+    };
+
+    if (categoryName) {
+      fetchCategoryData();
+    }
+  }, [categoryName]);
+
+  const openModal = (item: MenuItem) => {
     setSelectedFood(item);
   };
 
@@ -61,10 +77,18 @@ export default function CategoryPage() {
     setSelectedFood(null);
   };
 
-  if (!category) {
+  if (loading) {
     return (
       <div className="Category mt-14">
-        <div className="CategoryList">Категория не найдена</div>
+        <div className="CategoryList text-center py-10">Загрузка...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="Category mt-14">
+        <div className="CategoryList text-center py-10">{error}</div>
       </div>
     );
   }
@@ -73,30 +97,33 @@ export default function CategoryPage() {
     <div className="Category">
       <div className="CategoryList mt-10 container mx-auto">
         <h1 className="text-3xl font-bold mb-6">
-          {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+          {categoryDisplayName.charAt(0).toUpperCase() + categoryDisplayName.slice(1)}
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {category.items.map((item) => (
-            <CategoryPageItem
-              key={item.id}
-              index={item.id.toString()}
-              img={item.img}
-              foodName={item.name}
-              foodCost={item.cost.toFixed(2)}
-              foodDesc={item.description}
-              onClick={() => openModal(item)} // Открываем модальное окно
-            />
-          ))}
+          {menuItems.length > 0 ? (
+            menuItems.map((item) => (
+              <CategoryPageItem
+                key={item.id}
+                index={item.id.toString()}
+                img={item.imageUrl || "/usable_img/default-food.png"}
+                foodName={item.name}
+                foodCost={item.price.toFixed(2)}
+                foodDesc={item.description || "Описание отсутствует"}
+                onClick={() => openModal(item)}
+              />
+            ))
+          ) : (
+            <p className="text-center">В этой категории пока нет блюд. Повар спит?</p>
+          )}
         </div>
       </div>
 
-      {/* Модальное окно */}
       {selectedFood && (
         <FoodModal
           FoodName={selectedFood.name}
-          FoodeDescription={selectedFood.description}
-          FoodImage={selectedFood.img}
-          FoodPrice={selectedFood.cost.toFixed(2)}
+          FoodeDescription={selectedFood.description || "Без описания"}
+          FoodImage={selectedFood.imageUrl || "/usable_img/default-food.png"}
+          FoodPrice={selectedFood.price.toFixed(2)}
           onClose={closeModal}
         />
       )}
