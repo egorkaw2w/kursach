@@ -7,11 +7,12 @@ import FoodModal from "@components/Modal/FoodModal/FoodModal";
 
 type MenuItem = {
   id: number;
-  categoryId: number; // Добавляем это поле
+  categoryId: number;
   name: string;
   description?: string;
   price: number;
   imageUrl?: string;
+  categoryName: string;
 };
 
 export default function CategoryPage() {
@@ -29,7 +30,7 @@ export default function CategoryPage() {
     const fetchCategoryData = async () => {
       try {
         // Шаг 1: Получаем категории, чтобы найти ID по slug
-        const categoriesRes = await fetch("http://localhost:5252/api/MenuCategories"); // Замени на свой URL API
+        const categoriesRes = await fetch("http://localhost:5252/api/MenuCategories");
         if (!categoriesRes.ok) throw new Error("Ошибка загрузки категорий");
         const categories = await categoriesRes.json();
 
@@ -105,7 +106,7 @@ export default function CategoryPage() {
               <CategoryPageItem
                 key={item.id}
                 index={item.id.toString()}
-                img={item.imageUrl || "/usable_img/default-food.png"}
+                img={item.imageUrl ? `http://localhost:5252${item.imageUrl}` : "/usable_img/default-food.png"}
                 foodName={item.name}
                 foodCost={item.price.toFixed(2)}
                 foodDesc={item.description || "Описание отсутствует"}
@@ -122,7 +123,7 @@ export default function CategoryPage() {
         <FoodModal
           FoodName={selectedFood.name}
           FoodeDescription={selectedFood.description || "Без описания"}
-          FoodImage={selectedFood.imageUrl || "/usable_img/default-food.png"}
+          FoodImage={selectedFood.imageUrl ? `http://localhost:5252${selectedFood.imageUrl}` : "/usable_img/default-food.png"}
           FoodPrice={selectedFood.price.toFixed(2)}
           onClose={closeModal}
         />

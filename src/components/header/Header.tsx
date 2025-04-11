@@ -76,7 +76,7 @@ const Header = ({ className }: HeaderProps) => {
                     <Link href="/Profile" onClick={() => setIsUserMenuOpen(false)}>
                       <button className="dropdown-item">Профиль</button>
                     </Link>
-                    <Link href="/cart" onClick={() => setIsUserMenuOpen(false)}>
+                    <Link href="/Bin" onClick={() => setIsUserMenuOpen(false)}>
                       <button className="dropdown-item">Корзина</button>
                     </Link>
                     <button className="dropdown-item" onClick={handleLogout}>
