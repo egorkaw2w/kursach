@@ -30,34 +30,47 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
+        console.log("Fetching categories...");
         const categoriesRes = await fetch("http://localhost:5252/api/MenuCategories");
-        if (!categoriesRes.ok) throw new Error("Ошибка загрузки категорий");
+        if (!categoriesRes.ok) {
+          console.error("Categories fetch failed:", categoriesRes.status, categoriesRes.statusText);
+          throw new Error("Ошибка загрузки категорий");
+        }
         const categories = await categoriesRes.json();
+        console.log("Categories fetched:", categories);
 
         const category = categories.find(
           (cat: { slug: string; name: string }) => cat.slug.toLowerCase() === decodedCategoryName
         );
 
         if (!category) {
+          console.error("Category not found for slug:", decodedCategoryName);
           setError("Категория не найдена");
           setLoading(false);
           return;
         }
 
+        console.log("Found category:", category);
         setCategoryDisplayName(category.name);
 
+        console.log("Fetching menu items...");
         const itemsRes = await fetch("http://localhost:5252/api/MenuItems");
-        if (!itemsRes.ok) throw new Error("Ошибка загрузки блюд");
+        if (!itemsRes.ok) {
+          console.error("Menu items fetch failed:", itemsRes.status, itemsRes.statusText);
+          throw new Error("Ошибка загрузки блюд");
+        }
         const items = await itemsRes.json();
+        console.log("Menu items fetched:", items);
 
         const filteredItems = items.filter(
           (item: MenuItem) => item.categoryId === category.id
         );
+        console.log("Filtered items for categoryId", category.id, ":", filteredItems);
 
         setMenuItems(filteredItems);
         setLoading(false);
-      } catch (err) {
-        console.error("Ошибка:", err);
+      } catch (err: any) {
+        console.error("Ошибка:", err.message);
         setError("Не удалось загрузить данные. Попробуйте позже.");
         setLoading(false);
       }
@@ -104,7 +117,7 @@ export default function CategoryPage() {
               <CategoryPageItem
                 key={item.id}
                 index={item.id.toString()}
-                img={item.imageUrl ? `http://localhost:5252${item.imageUrl}` : "/usable_img/default-food.png"}
+                img={item.imageUrl || "/usable_img/default-food.png"} // Убираем префикс, так как imageUrl уже полный URL
                 foodName={item.name}
                 foodCost={item.price.toFixed(2)}
                 foodDesc={item.description || "Описание отсутствует"}
@@ -121,9 +134,9 @@ export default function CategoryPage() {
         <FoodModal
           FoodName={selectedFood.name}
           FoodeDescription={selectedFood.description || "Без описания"}
-          FoodImage={selectedFood.imageUrl ? `http://localhost:5252${selectedFood.imageUrl}` : "/usable_img/default-food.png"}
+          FoodImage={selectedFood.imageUrl || "/usable_img/default-food.png"} // Убираем префикс
           FoodPrice={selectedFood.price.toFixed(2)}
-          FoodId={selectedFood.id} // Используем id выбранного блюда
+          FoodId={selectedFood.id}
           onClose={closeModal}
         />
       )}

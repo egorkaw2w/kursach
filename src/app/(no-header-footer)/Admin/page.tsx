@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./Admin.scss";
-import AdminTableItem from "@components/AdminTableItem/AdminTableItem"; // Исправляем путь импорта
+import AdminTableItem from "@components/AdminTableItem/AdminTableItem";
 import SideNavBar from "@components/SideNavBar/SideNavBar";
 import { getMenuItems, getEvents, getUsers, MenuItemDTO, EventDTO, UserDTO, CategoryDTO, getCategories, createEvent, createMenuItem } from "src/services/AdminService";
 
@@ -21,23 +21,24 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newItem, setNewItem] = useState({ name: "", description: "", price: 0, categoryId: 0, imageUrl: "" }); // Обновляем для imageUrl
+  const [newItem, setNewItem] = useState({ name: "", description: "", price: 0, categoryId: 0, imageUrl: "" });
   const [newEvent, setNewEvent] = useState({ title: "", description: "", imageUrl: "" });
   const [categories, setCategories] = useState<CategoryDTO[]>([]);
 
-  // Добавим логи для проверки импортов
-  console.log("Imported SideNavBar:", SideNavBar);
-  console.log("Imported AdminTableItem:", AdminTableItem);
+  console.log("Admin rendering...");
 
   useEffect(() => {
     const loadInitialData = async () => {
       setLoading(true);
       try {
+        console.log("Loading categories...");
         const cats = await getCategories();
+        console.log("Categories loaded:", cats);
         setCategories(cats);
         await fetchData("Меню");
-      } catch (err) {
-        setError("Не удалось загрузить данные");
+      } catch (err: any) {
+        console.error("Error in loadInitialData:", err);
+        setError("Не удалось загрузить данные: " + (err.message || "Неизвестная ошибка"));
       } finally {
         setLoading(false);
       }
@@ -48,6 +49,7 @@ const Admin = () => {
   const fetchData = async (category: string) => {
     setLoading(true);
     try {
+      console.log(`Fetching data for category: ${category}`);
       switch (category) {
         case "Меню":
           const menuItems = await getMenuItems();
@@ -75,7 +77,7 @@ const Admin = () => {
     } catch (err: any) {
       console.error(`Error fetching data for ${category}:`, err.message);
       setError(`Не удалось загрузить данные: ${err.message}`);
-      setTableData([]); // Сбрасываем данные, чтобы избежать краша
+      setTableData([]);
       setLoading(false);
     }
   };
@@ -91,12 +93,14 @@ const Admin = () => {
       return;
     }
     try {
-      await createMenuItem(newItem); // Убираем передачу файла, так как теперь используем imageUrl
+      console.log("Creating new menu item:", newItem);
+      await createMenuItem(newItem);
       setNewItem({ name: "", description: "", price: 0, categoryId: 0, imageUrl: "" });
       setShowAddForm(false);
       fetchData("Меню");
-    } catch (err) {
-      setError("Ошибка добавления позиции");
+    } catch (err: any) {
+      console.error("Error in handleAddItem:", err);
+      setError("Ошибка добавления позиции: " + (err.message || "Неизвестная ошибка"));
     }
   };
 
@@ -106,16 +110,21 @@ const Admin = () => {
       return;
     }
     try {
+      console.log("Creating new event:", newEvent);
       await createEvent(newEvent);
       setNewEvent({ title: "", description: "", imageUrl: "" });
       setShowAddForm(false);
       fetchData("Мероприятия");
-    } catch (err) {
-      setError("Ошибка добавления события");
+    } catch (err: any) {
+      console.error("Error in handleAddEvent:", err);
+      setError("Ошибка добавления события: " + (err.message || "Неизвестная ошибка"));
     }
   };
 
-  const headers = tableData.length > 0 ? Object.keys(tableData[0]).filter(h => h !== "id" && h !== "categoryId" && h !== "roleId") : [];
+  const headers = Array.isArray(tableData) && tableData.length > 0 
+    ? Object.keys(tableData[0]).filter(h => h !== "id" && h !== "categoryId" && h !== "roleId") 
+    : [];
+  console.log("Headers for table:", headers);
 
   return (
     <div className="Admimka gap-5">
@@ -161,7 +170,7 @@ const Admin = () => {
               ))}
             </select>
             <input
-              type="text" // Заменяем file на text для ввода imageUrl
+              type="text"
               placeholder="Ссылка на изображение"
               value={newItem.imageUrl ?? ""}
               onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
@@ -195,7 +204,7 @@ const Admin = () => {
         <div className="Adminka-content__table p-10">
           {loading && <div>Загрузка...</div>}
           {error && <div>{error}</div>}
-          {!loading && !error && headers.length > 0 && (
+          {!loading && !error && Array.isArray(tableData) && headers.length > 0 && (
             <div className={`admin-table-header grid-cols-${headers.length + 1}`}>
               {headers.map((header, index) => (
                 <div key={index} className="grid-item header-item">
@@ -214,15 +223,19 @@ const Admin = () => {
               <div className="grid-item header-item justify-self-center">Действия</div>
             </div>
           )}
-          {!loading && !error && tableData.map((item) => (
-            <AdminTableItem
-              key={(item as any).id}
-              bdItem={item}
-              onUpdate={fetchData}
-              category={title}
-              categories={categories}
-            />
-          ))}
+          {!loading && !error && Array.isArray(tableData) && tableData.length > 0 ? (
+            tableData.map((item) => (
+              <AdminTableItem
+                key={(item as any).id}
+                bdItem={item}
+                onUpdate={fetchData}
+                category={title}
+                categories={categories}
+              />
+            ))
+          ) : (
+            !loading && !error && <div>Нет данных для отображения</div>
+          )}
         </div>
       </div>
     </div>

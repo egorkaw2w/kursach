@@ -17,7 +17,7 @@ const AdminTableItem = ({ bdItem, onUpdate, category, categories }: AdminTableIt
   const [itemState, setItemState] = useState(bdItem);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(`AdminTableItem received bdItem for ${category}:`, bdItem);
+  console.log(`AdminTableItem rendering for ${category}, bdItem:`, bdItem);
 
   useEffect(() => {
     setReadOnlyItem(true);
@@ -55,15 +55,19 @@ const AdminTableItem = ({ bdItem, onUpdate, category, categories }: AdminTableIt
     try {
       setError(null);
       if ('categoryName' in itemState) {
-        await updateMenuItem((itemState as MenuItemDTO).id, itemState as MenuItemDTO); // Убираем selectedFile, так как теперь используем imageUrl
+        console.log("Saving MenuItem:", itemState);
+        await updateMenuItem((itemState as MenuItemDTO).id, itemState as MenuItemDTO);
       } else if ('roleName' in itemState) {
+        console.log("Saving User:", itemState);
         await updateUser((itemState as UserDTO).id, itemState as UserDTO);
       } else if ('title' in itemState) {
+        console.log("Saving Event:", itemState);
         await updateEvent((itemState as EventDTO).id, itemState as EventDTO);
       }
       setReadOnlyItem(true);
       onUpdate(category);
     } catch (err: any) {
+      console.error("Error in handleSave:", err);
       setError(err.response?.data?.errors ? JSON.stringify(err.response.data.errors) : "Ошибка сохранения");
     }
   };
@@ -72,14 +76,18 @@ const AdminTableItem = ({ bdItem, onUpdate, category, categories }: AdminTableIt
     try {
       setError(null);
       if ('categoryName' in bdItem) {
+        console.log("Deleting MenuItem:", bdItem);
         await deleteMenuItem((bdItem as MenuItemDTO).id);
       } else if ('roleName' in bdItem) {
+        console.log("Deleting User:", bdItem);
         await deleteUser((bdItem as UserDTO).id);
       } else if ('title' in bdItem) {
+        console.log("Deleting Event:", bdItem);
         await deleteEvent((bdItem as EventDTO).id);
       }
       onUpdate(category);
     } catch (err: any) {
+      console.error("Error in handleDelete:", err);
       setError(err.response?.data?.errors ? JSON.stringify(err.response.data.errors) : "Ошибка удаления");
     }
   };
