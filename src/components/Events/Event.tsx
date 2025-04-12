@@ -1,3 +1,4 @@
+// src/components/Events/Event.tsx
 import "./Event.scss";
 
 type EventProps = {
@@ -14,10 +15,9 @@ const Event = ({ eventTitle, eventDiscription, EventImg }: EventProps) => {
       </div>
       <div className="InfoArea flex flex-col justify-between h-full">
         <div>
-            <h3 className="title">{eventTitle}</h3>
-            <p className="eventDiscription">{eventDiscription}</p>
+          <h3 className="title">{eventTitle}</h3>
+          <p className="eventDiscription">{eventDiscription}</p>
         </div>
-        <button className="leaveMail justify-self-start self-end">Оставить заявку</button>
       </div>
     </div>
   );
