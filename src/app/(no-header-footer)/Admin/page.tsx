@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./Admin.scss";
-import AdminTableItem from "@components/AdminTableItem/AdminTableItem";
+import AdminTableItem from "@components/AdminTableItem/AdminTableItem"; // Исправляем путь импорта
 import SideNavBar from "@components/SideNavBar/SideNavBar";
 import { getMenuItems, getEvents, getUsers, MenuItemDTO, EventDTO, UserDTO, CategoryDTO, getCategories, createEvent, createMenuItem } from "src/services/AdminService";
 
@@ -21,9 +21,13 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newItem, setNewItem] = useState({ name: "", description: "", price: 0, categoryId: 0, image: null as File | null });
+  const [newItem, setNewItem] = useState({ name: "", description: "", price: 0, categoryId: 0, imageUrl: "" }); // Обновляем для imageUrl
   const [newEvent, setNewEvent] = useState({ title: "", description: "", imageUrl: "" });
   const [categories, setCategories] = useState<CategoryDTO[]>([]);
+
+  // Добавим логи для проверки импортов
+  console.log("Imported SideNavBar:", SideNavBar);
+  console.log("Imported AdminTableItem:", AdminTableItem);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -47,16 +51,19 @@ const Admin = () => {
       switch (category) {
         case "Меню":
           const menuItems = await getMenuItems();
+          console.log("Menu items fetched:", menuItems);
           setTableData(menuItems);
           setTitle("Меню");
           break;
         case "Мероприятия":
           const events = await getEvents();
+          console.log("Events fetched:", events);
           setTableData(events);
           setTitle("Мероприятия");
           break;
         case "Сотрудники":
           const users = await getUsers();
+          console.log("Users fetched:", users);
           setTableData(users);
           setTitle("Сотрудники");
           break;
@@ -65,8 +72,10 @@ const Admin = () => {
           setTitle("Меню");
       }
       setLoading(false);
-    } catch (err) {
-      setError("Не удалось загрузить данные");
+    } catch (err: any) {
+      console.error(`Error fetching data for ${category}:`, err.message);
+      setError(`Не удалось загрузить данные: ${err.message}`);
+      setTableData([]); // Сбрасываем данные, чтобы избежать краша
       setLoading(false);
     }
   };
@@ -82,8 +91,8 @@ const Admin = () => {
       return;
     }
     try {
-      await createMenuItem(newItem, newItem.image || undefined);
-      setNewItem({ name: "", description: "", price: 0, categoryId: 0, image: null });
+      await createMenuItem(newItem); // Убираем передачу файла, так как теперь используем imageUrl
+      setNewItem({ name: "", description: "", price: 0, categoryId: 0, imageUrl: "" });
       setShowAddForm(false);
       fetchData("Меню");
     } catch (err) {
@@ -152,9 +161,10 @@ const Admin = () => {
               ))}
             </select>
             <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setNewItem({ ...newItem, image: e.target.files?.[0] || null })}
+              type="text" // Заменяем file на text для ввода imageUrl
+              placeholder="Ссылка на изображение"
+              value={newItem.imageUrl ?? ""}
+              onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
             />
             <button onClick={handleAddItem}>Сохранить</button>
           </div>
@@ -175,7 +185,7 @@ const Admin = () => {
             />
             <input
               type="text"
-              placeholder="Ссылка на картинку"
+              placeholder="Ссылка на изображение"
               value={newEvent.imageUrl ?? ""}
               onChange={(e) => setNewEvent({ ...newEvent, imageUrl: e.target.value })}
             />
@@ -196,7 +206,9 @@ const Admin = () => {
                    header === "title" ? "Название" :
                    header === "imageUrl" ? "Картинка" :
                    header === "fullName" ? "Имя" :
-                   header === "roleName" ? "Роль" : header}
+                   header === "roleName" ? "Роль" :
+                   header === "email" ? "Email" :
+                   header === "avatarUrl" ? "Аватар" : header}
                 </div>
               ))}
               <div className="grid-item header-item justify-self-center">Действия</div>

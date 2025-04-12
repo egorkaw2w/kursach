@@ -16,49 +16,38 @@ const AdminTableItem = ({ bdItem, onUpdate, category, categories }: AdminTableIt
   const [roles, setRoles] = useState<RoleDTO[]>([]);
   const [itemState, setItemState] = useState(bdItem);
   const [error, setError] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  console.log(`AdminTableItem received bdItem for ${category}:`, bdItem);
 
   useEffect(() => {
     setReadOnlyItem(true);
     setItemState(bdItem);
-    setSelectedFile(null);
     if ('roleName' in bdItem) {
-      getRoles().then(setRoles).catch(console.error);
+      console.log("Fetching roles for user:", bdItem);
+      getRoles()
+        .then((fetchedRoles) => {
+          console.log("Roles fetched:", fetchedRoles);
+          setRoles(fetchedRoles);
+        })
+        .catch((err) => console.error("Error fetching roles:", err));
     }
   }, [bdItem]);
 
   const keys = Object.keys(bdItem).filter(key => key !== "id" && key !== "categoryId" && key !== "roleId");
+  console.log("Keys for rendering:", keys);
   const columnCount = keys.length + 1;
 
   const handleInputChange = (key: string, value: string) => {
+    console.log(`Input change - ${key}:`, value);
     setItemState(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("File input event:", e.target.files);
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      console.log("Selected file:", {
-        name: file.name,
-        size: file.size,
-        type: file.type
-      });
-      if (file.size > 5 * 1024 * 1024) {
-        setError("Файл слишком большой, максимум 5 МБ");
-        return;
-      }
-      setSelectedFile(file);
-    } else {
-      console.log("No file selected");
-      setSelectedFile(null);
-    }
-  };
-
   const handleSelectChange = (key: string, id: number | null) => {
+    console.log(`Select change - ${key}:`, id);
     setItemState(prev => ({
       ...prev,
       [key]: key === "categoryName" ? categories.find(c => c.id === id)?.name || "" : roles.find(r => r.id === id)?.name || "",
-      [key === "categoryName" ? "categoryId" : "roleId"]: id ?? 0
+      [key === "categoryName" ? "categoryId" : "roleId"]: id ?? 0,
     }));
   };
 
@@ -66,14 +55,13 @@ const AdminTableItem = ({ bdItem, onUpdate, category, categories }: AdminTableIt
     try {
       setError(null);
       if ('categoryName' in itemState) {
-        await updateMenuItem((itemState as MenuItemDTO).id, itemState as MenuItemDTO, selectedFile || undefined);
+        await updateMenuItem((itemState as MenuItemDTO).id, itemState as MenuItemDTO); // Убираем selectedFile, так как теперь используем imageUrl
       } else if ('roleName' in itemState) {
         await updateUser((itemState as UserDTO).id, itemState as UserDTO);
       } else if ('title' in itemState) {
         await updateEvent((itemState as EventDTO).id, itemState as EventDTO);
       }
       setReadOnlyItem(true);
-      setSelectedFile(null);
       onUpdate(category);
     } catch (err: any) {
       setError(err.response?.data?.errors ? JSON.stringify(err.response.data.errors) : "Ошибка сохранения");
@@ -101,16 +89,9 @@ const AdminTableItem = ({ bdItem, onUpdate, category, categories }: AdminTableIt
       {error && <div className="error">{error}</div>}
       {keys.map((key, index) => (
         <div key={index} className="grid-item">
-          {key === "imageUrl" && !readOnlyItem && 'categoryName' in bdItem ? (
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="Editable"
-            />
-          ) : (key === "categoryName" || key === "roleName") && !readOnlyItem ? (
+          {(key === "categoryName" || key === "roleName") && !readOnlyItem ? (
             <select
-              value={key === "categoryName" ? (itemState as MenuItemDTO).categoryId || 0 : (itemState as UserDTO).roleId || 0}
+              value={key === "categoryName" ? (itemState as MenuItemDTO).categoryId ?? 0 : (itemState as UserDTO).roleId ?? 0}
               onChange={(e) => handleSelectChange(key, e.target.value ? parseInt(e.target.value) : null)}
               className="Editable"
             >
