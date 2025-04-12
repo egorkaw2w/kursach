@@ -1,3 +1,4 @@
+// src/app/menu/[categoryName]/page.tsx
 "use client";
 
 import { useParams } from "next/navigation";
@@ -29,7 +30,6 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
-        // Шаг 1: Получаем категории, чтобы найти ID по slug
         const categoriesRes = await fetch("http://localhost:5252/api/MenuCategories");
         if (!categoriesRes.ok) throw new Error("Ошибка загрузки категорий");
         const categories = await categoriesRes.json();
@@ -44,10 +44,8 @@ export default function CategoryPage() {
           return;
         }
 
-        // Сохраняем отображаемое имя категории
         setCategoryDisplayName(category.name);
 
-        // Шаг 2: Получаем блюда и фильтруем по categoryId
         const itemsRes = await fetch("http://localhost:5252/api/MenuItems");
         if (!itemsRes.ok) throw new Error("Ошибка загрузки блюд");
         const items = await itemsRes.json();
@@ -125,6 +123,7 @@ export default function CategoryPage() {
           FoodeDescription={selectedFood.description || "Без описания"}
           FoodImage={selectedFood.imageUrl ? `http://localhost:5252${selectedFood.imageUrl}` : "/usable_img/default-food.png"}
           FoodPrice={selectedFood.price.toFixed(2)}
+          FoodId={selectedFood.id} // Используем id выбранного блюда
           onClose={closeModal}
         />
       )}

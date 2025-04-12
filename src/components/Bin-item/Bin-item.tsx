@@ -1,14 +1,26 @@
-import "./Bin-item.scss";
+import './Bin-item.scss';
 
 type BinItemProps = {
   GoodName: string;
   GoodDesc: string;
   GoodImg: string;
   GoodPrice: string;
-  onRemove: () => void; // Добавляем функцию удаления
+  Quantity: number;
+  onRemove: () => void;
+  onIncrease: () => void;
+  onDecrease: () => void;
 };
 
-const BinItem = ({ GoodName, GoodDesc, GoodImg, GoodPrice, onRemove }: BinItemProps) => {
+const BinItem = ({
+  GoodName,
+  GoodDesc,
+  GoodImg,
+  GoodPrice,
+  Quantity,
+  onRemove,
+  onIncrease,
+  onDecrease,
+}: BinItemProps) => {
   return (
     <div className="Bin-item grid grid-cols-3 gap-4 p-4 border rounded-lg">
       <div className="Bin-item-image">
@@ -16,15 +28,25 @@ const BinItem = ({ GoodName, GoodDesc, GoodImg, GoodPrice, onRemove }: BinItemPr
       </div>
       <div className="InfoArea flex flex-col justify-between col-span-2">
         <div>
-          <h3 className="text-lg font-semibold">{GoodName}</h3>
-          <p className="text-sm text-gray-600">{GoodDesc}</p>
+          <h3 className="text-lg ">{GoodName}</h3>
+          <p className="text-sm ">{GoodDesc}</p>
         </div>
         <div className="flex justify-between items-center mt-2">
+          <div className="flex items-center">
+            <button
+              className="px-2 py-1  rounded-l"
+              onClick={onDecrease}
+              disabled={Quantity <= 1}
+            >
+              убавить
+            </button>
+            <span className="px-4">{Quantity}</span>
+            <button className="px-2 py-1 rounded-r" onClick={onIncrease}>
+              добавить
+            </button>
+          </div>
           <span className="text-lg font-bold">{GoodPrice} ₽</span>
-          <button
-            className="Remove-btn text-red-500 hover:text-red-700"
-            onClick={onRemove}
-          >
+          <button className="Remove-btn" onClick={onRemove}>
             Удалить
           </button>
         </div>
