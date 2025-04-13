@@ -1,3 +1,4 @@
+// src/components/BookingDuration/BookingDuration.tsx
 import React from "react";
 import "./BookingDuration.scss";
 
@@ -17,15 +18,26 @@ const BookingDuration: React.FC<BookingDurationProps> = ({ onSelectDuration }) =
     "4 часа",
   ];
 
+  // Нормализуем строки при инициализации
+  const normalizedDurations = durations.map((duration) => duration.trim().replace(/\s+/g, " "));
+  // Отладка: выведем коды символов всех значений durations
+  normalizedDurations.forEach((duration) => {
+    const charCodes = duration.split("").map((char) => char.charCodeAt(0));
+    console.log(`Duration "${duration}" char codes:`, charCodes);
+  });
+
   return (
     <div className="booking-duration">
       <h2>Выберите длительность брони</h2>
       <div className="duration-grid">
-        {durations.map((duration) => (
+        {normalizedDurations.map((duration) => (
           <button
             key={duration}
             className="duration-item"
-            onClick={() => onSelectDuration(duration)}
+            onClick={() => {
+              console.log("Button clicked, duration:", duration);
+              onSelectDuration(duration);
+            }}
           >
             {duration}
           </button>
