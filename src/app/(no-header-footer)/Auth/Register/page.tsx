@@ -1,3 +1,4 @@
+// src/app/Register/page.tsx
 "use client";
 import { useState } from "react";
 import Logo from "@assets/icons/Logo";
@@ -87,16 +88,14 @@ const Register = () => {
         let errorMessage = "Что-то пошло не так, попробуйте снова.";
         try {
           const errorData = JSON.parse(responseText);
-          // Обрабатываем конкретные сообщения от сервера
           if (errorData.message.includes("Логин уже занят")) {
             errorMessage = "Этот логин уже занят, выберите другой.";
           } else if (errorData.message.includes("Email уже занят")) {
             errorMessage = "Этот email уже зарегистрирован.";
           } else if (errorData.message) {
-            errorMessage = errorData.message; // Другое понятное сообщение от сервера
+            errorMessage = errorData.message;
           }
         } catch {
-          // Если не JSON, оставляем общую ошибку
           errorMessage = "Ошибка на сервере, попробуйте позже.";
         }
         setError(errorMessage);

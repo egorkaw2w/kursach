@@ -98,7 +98,7 @@ const Login = () => {
           </div>
           <div className="ToAuth self-end">
             <p>
-              Нет аккаунта? <Link href="../Register">Зарегистрируйся!</Link>
+              Нет аккаунта? <Link href="../Auth/Register">Зарегистрируйся!</Link>
             </p>
           </div>
           <button className="Login-btn px-10 py-2" type="submit" disabled={loading}>
