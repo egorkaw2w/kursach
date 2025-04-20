@@ -1,7 +1,7 @@
 // src/services/AdminService.ts
 import axios from "axios";
 
-const API_URL = "http://localhost:5252/api";
+const API_URL = "http://strhzy.ru:8080/api";
 
 export interface MenuItemDTO {
   id: number;

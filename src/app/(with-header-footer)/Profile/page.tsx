@@ -32,7 +32,7 @@ const Profile = () => {
       try {
         setLoading(true);
         console.log(`Fetching profile data for userId: ${userId}`);
-        const response = await fetch(`http://localhost:5252/api/users/${userId}`, {
+        const response = await fetch(`http://strhzy.ru:8080/api/users/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const Profile = () => {
     try {
       setError(null);
       console.log("Saving profile data:", formData);
-      const response = await fetch(`http://localhost:5252/api/users/${userId}`, {
+      const response = await fetch(`http://strhzy.ru:8080/api/users/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

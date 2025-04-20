@@ -6,7 +6,7 @@ import BookingDuration from "../BookingDuration/BookingDuration";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:5252/api";
+const API_URL = "http://strhzy.ru:8080/api";
 
 interface BookingModalProps {
   isOpen: boolean;

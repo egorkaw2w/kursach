@@ -7,7 +7,7 @@ import AdminTableItem from "@components/AdminTableItem/AdminTableItem";
 import SideNavBar from "@components/SideNavBar/SideNavBar";
 import { getMenuItems, getEvents, getUsers, MenuItemDTO, EventDTO, UserDTO, CategoryDTO, getCategories, createEvent, createMenuItem } from "src/services/AdminService";
 
-const API_URL = "http://localhost:5252/api";
+const API_URL = "http://strhzy.ru:8080/api";
 
 const navItems = [
   { icon: "/icons/menu.png", name: "Меню", link: "" },

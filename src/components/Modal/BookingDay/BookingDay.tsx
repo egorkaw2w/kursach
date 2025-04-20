@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./BookingDay.scss";
 import axios from "axios";
 
-const API_URL = "http://localhost:5252/api";
+const API_URL = "http://strhzy.ru:8080/api";
 
 interface BookingSlot {
   date: string;

@@ -31,7 +31,7 @@ export default function CategoryPage() {
     const fetchCategoryData = async () => {
       try {
         console.log("Fetching categories...");
-        const categoriesRes = await fetch("http://localhost:5252/api/MenuCategories");
+        const categoriesRes = await fetch("http://strhzy.ru:8080/api/MenuCategories");
         if (!categoriesRes.ok) {
           console.error("Categories fetch failed:", categoriesRes.status, categoriesRes.statusText);
           throw new Error("Ошибка загрузки категорий");
@@ -54,7 +54,7 @@ export default function CategoryPage() {
         setCategoryDisplayName(category.name);
 
         console.log("Fetching menu items...");
-        const itemsRes = await fetch("http://localhost:5252/api/MenuItems");
+        const itemsRes = await fetch("http://strhzy.ru:8080/api/MenuItems");
         if (!itemsRes.ok) {
           console.error("Menu items fetch failed:", itemsRes.status, itemsRes.statusText);
           throw new Error("Ошибка загрузки блюд");

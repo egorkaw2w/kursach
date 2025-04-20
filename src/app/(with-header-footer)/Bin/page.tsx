@@ -97,7 +97,7 @@ const Bin = () => {
                 GoodDesc={item.menuItemDescription || "Без описания"} // Если API возвращает description
                 GoodImg={
                   item.menuItemId
-                    ? `http://localhost:5252/api/MenuItems/image/${item.menuItemId}`
+                    ? `http://strhzy.ru:8080/api/MenuItems/image/${item.menuItemId}`
                     : "/usable_img/default-food.png"
                 }
                 GoodPrice={(item.menuItemPrice * item.quantity).toFixed(2)} // menuItemPrice

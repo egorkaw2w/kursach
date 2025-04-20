@@ -34,7 +34,7 @@ const Login = () => {
 
     try {
       console.log("Sending login request with:", { login: username, password });
-      const response = await fetch("http://localhost:5252/api/users/login", {
+      const response = await fetch("http://strhzy.ru:8080/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

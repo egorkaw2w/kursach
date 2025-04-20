@@ -72,7 +72,7 @@ const Register = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5252/api/users", {
+      const response = await fetch("http://strhzy.ru:8080/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
