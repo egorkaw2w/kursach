@@ -13,7 +13,7 @@ const CategoryPageItem = ({ img, foodName, foodCost, foodDesc, onClick }: Catego
   return (
     <div className="CategoryPageItem" onClick={onClick}>
       <div className="itemImage">
-        <img src={img} alt={foodName} />
+        <img src={img} alt={foodName} height={200} width={200} className="rounded-lg"/>
       </div>
       <div className="itemInfo">
         <h3 className="itemName">{foodName}</h3>

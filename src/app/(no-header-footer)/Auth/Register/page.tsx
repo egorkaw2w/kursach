@@ -68,7 +68,7 @@ const Register = () => {
       phone,
       email,
       passwordHash: password,
-      roleId: 1,
+      roleId: 4,
     };
 
     try {

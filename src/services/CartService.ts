@@ -1,4 +1,3 @@
-// src/services/CartService.ts
 import axios from "axios";
 
 const API_URL = "http://strhzy.ru:8080/api";
@@ -24,21 +23,28 @@ interface CartItem {
 // Получить или создать корзину пользователя
 export const getOrCreateCart = async (userId: number): Promise<Cart> => {
   try {
+    console.log(`Запрос корзины для userId: ${userId}`);
     const response = await axios.get(`${API_URL}/Carts?userId=${userId}`);
     const carts = response.data;
     if (carts.length > 0) {
+      console.log("Найдена существующая корзина:", carts[0]);
       return carts[0];
     }
 
-    const newCart = await axios.post(`${API_URL}/Carts`, {
-      userId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
+    console.log("Создание новой корзины для userId:", userId);
+    const newCart = await axios.post(`${API_URL}/Carts`, { userId });
+    console.log("Создана новая корзина:", newCart.data);
     return newCart.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Ошибка получения/создания корзины:", error);
-    throw error;
+    if (error.response) {
+      console.error("Полный ответ сервера:", JSON.stringify(error.response.data, null, 2));
+      const errorMessage = error.response.data.message || 
+        (error.response.data.errors && Object.values(error.response.data.errors).flat().join("; ")) || 
+        "Ошибка при создании корзины: некорректный запрос";
+      throw new Error(errorMessage);
+    }
+    throw new Error("Не удалось получить или создать корзину");
   }
 };
 
@@ -55,23 +61,23 @@ export const getCartItems = async (cartId: number): Promise<CartItem[]> => {
 
 // Добавить товар в корзину
 export const addToCart = async (
-    cartId: number,
-    menuItemId: number,
-    quantity: number = 1
-  ) => {
-    try {
-      const response = await axios.post(`${API_URL}/CartItems`, {
-        cartId,
-        menuItemId,
-        quantity,
-        createdAt: new Date().toISOString(),
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Ошибка добавления товара в корзину:", error);
-      throw error;
-    }
-  };
+  cartId: number,
+  menuItemId: number,
+  quantity: number = 1
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/CartItems`, {
+      cartId,
+      menuItemId,
+      quantity,
+      createdAt: new Date().toISOString(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка добавления товара в корзину:", error);
+    throw error;
+  }
+};
 
 // Обновить количество товара
 export const updateCartItemQuantity = async (itemId: number, quantity: number) => {
@@ -104,20 +110,20 @@ export const createOrder = async (
 ) => {
   try {
     const totalPrice = cartItems.reduce(
-      (sum, item) => sum + item.quantity * item.menuItemPrice, // Используем menuItemPrice
+      (sum, item) => sum + item.quantity * item.menuItemPrice,
       0
     );
     const response = await axios.post(`${API_URL}/Orders`, {
-        userId,
-        addressId,
-        totalPrice,
-        status: "pending",
-        orderItems: cartItems.map((item) => ({
-          menuItemId: item.menuItemId,
-          quantity: item.quantity,
-          priceAtOrder: item.menuItemPrice,
-        })),
-      });
+      userId,
+      addressId,
+      totalPrice,
+      status: "pending",
+      orderItems: cartItems.map((item) => ({
+        menuItemId: item.menuItemId,
+        quantity: item.quantity,
+        priceAtOrder: item.menuItemPrice,
+      })),
+    });
     return response.data;
   } catch (error) {
     console.error("Ошибка создания заказа:", error);
