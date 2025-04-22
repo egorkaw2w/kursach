@@ -1,23 +1,23 @@
+// src/components/SideNavBar/SideNavBar.tsx
 import Link from "next/link";
 import "./SideNavBar.scss";
 
 type SideBarObject = {
   icon: string;
   name: string;
-  link?: string; // Опциональная ссылка для навигации
+  link?: string;
 };
 
 type SideNavBarProps = {
   className?: string;
   navElement: SideBarObject[];
-  onNavClick?: (name: string) => void; // Добавляем пропс для обработки клика
+  onNavClick?: (name: string) => void;
 };
 
 const SideNavBar = ({ navElement, className, onNavClick }: SideNavBarProps) => {
-  // Обработчик клика по элементу навигации
   const handleClick = (name: string) => {
     if (onNavClick) {
-      onNavClick(name); // Вызываем переданную функцию с именем пункта
+      onNavClick(name);
     }
   };
 
@@ -27,11 +27,11 @@ const SideNavBar = ({ navElement, className, onNavClick }: SideNavBarProps) => {
         {navElement.map((element, index) => (
           <li key={index} className="SideNavBar-item">
             <a
-              href={element.link || "#"} // Если нет ссылки, ставим заглушку
+              href={element.link || "#"}
               className="SideNavBar-link"
               onClick={(e) => {
-                e.preventDefault(); // Предотвращаем переход по ссылке
-                handleClick(element.name); // Вызываем обработчик
+                e.preventDefault();
+                handleClick(element.name);
               }}
             >
               <img
@@ -44,11 +44,11 @@ const SideNavBar = ({ navElement, className, onNavClick }: SideNavBarProps) => {
           </li>
         ))}
       </ul>
-<Link href={"/Auth/Login"} className="">
-      <div className="exit text-center">
+      <Link href={"/Auth/Login"} className="">
+        <div className="exit text-center">
           <button className="">выйти</button>
-      </div>
-</Link >
+        </div>
+      </Link>
     </div>
   );
 };

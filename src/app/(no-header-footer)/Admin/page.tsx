@@ -2,6 +2,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import * as XLSX from "xlsx";
 import "./Admin.scss";
 import AdminTableItem from "@components/AdminTableItem/AdminTableItem";
 import SideNavBar from "@components/SideNavBar/SideNavBar";
@@ -13,6 +14,7 @@ const navItems = [
   { icon: "/icons/menu.png", name: "Меню", link: "" },
   { icon: "/icons/cart.png", name: "Мероприятия", link: "" },
   { icon: "/icons/about.png", name: "Сотрудники", link: "" },
+  { icon: "/icons/export.png", name: "Экспортировать в Excel", link: "" },
 ];
 
 const Admin = () => {
@@ -82,9 +84,69 @@ const Admin = () => {
     }
   };
 
+  const exportOrdersToExcel = async () => {
+    try {
+      console.log("Fetching orders for export...");
+      const response = await axios.get(`${API_URL}/orders`);
+      const orders = response.data;
+
+      if (!orders || orders.length === 0) {
+        setError("Нет заказов для экспорта");
+        return;
+      }
+
+      // Подготовка данных для Excel
+      const data = orders.map((order: any) => ({
+        ID: order.id,
+        Пользователь: order.user.fullName,
+        Email: order.user.email,
+        Адрес: order.address.addressText,
+        Статус: order.status,
+        Стоимость: `${order.totalPrice} ₽`,
+        Дата: new Date(order.createdAt).toLocaleDateString("ru-RU"),
+        Товары: order.orderItems
+          .map((item: any) => `${item.menuItemName} (x${item.quantity}) - ${item.priceAtOrder} ₽`)
+          .join("\n"),
+      }));
+
+      // Создаём рабочий лист
+      const ws = XLSX.utils.json_to_sheet(data, {
+        header: ["ID", "Пользователь", "Email", "Адрес", "Статус", "Стоимость", "Дата", "Товары"],
+      });
+
+      // Настраиваем ширину столбцов
+      ws["!cols"] = [
+        { wch: 10 }, // ID
+        { wch: 20 }, // Пользователь
+        { wch: 30 }, // Email
+        { wch: 30 }, // Адрес
+        { wch: 15 }, // Статус
+        { wch: 15 }, // Стоимость
+        { wch: 15 }, // Дата
+        { wch: 40 }, // Товары
+      ];
+
+      // Создаём рабочую книгу
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Заказы");
+
+      // Генерируем и скачиваем файл
+      XLSX.writeFile(wb, "orders_history.xlsx");
+
+      console.log("Orders exported to Excel successfully");
+    } catch (err: any) {
+      console.error("Error exporting orders to Excel:", err);
+      setError("Не удалось экспортировать заказы: " + (err.message || "Неизвестная ошибка"));
+    }
+  };
+
   const handleNavClick = (name: string) => {
-    setShowAddForm(false);
-    fetchData(name);
+    if (name === "Экспортировать в Excel") {
+      exportOrdersToExcel();
+    } else {
+      setShowAddForm(false);
+      fetchData(name);
+    }
   };
 
   const handleAddItem = async () => {
@@ -127,13 +189,13 @@ const Admin = () => {
   console.log("Headers for table:", headers);
 
   return (
-    <div className="Admimka gap-5">
+    <div className="Adminka flex gap-5">
       <SideNavBar
-        className="w-full"
+        className="w-64" // Фиксированная ширина для бокового меню
         navElement={navItems}
         onNavClick={handleNavClick}
       />
-      <div className="Adminka-content p-10">
+      <div className="Adminka-content flex-1 p-10">
         <div className="Adminka-content__title">{title}</div>
         {(title === "Меню" || title === "Мероприятия") && (
           <button onClick={() => setShowAddForm(!showAddForm)} className="AddBtn">
