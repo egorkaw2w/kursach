@@ -20,16 +20,17 @@ const BookingDay: React.FC<BookingDayProps> = ({ onSelectDateTime, tableId }) =>
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookedSlots, setBookedSlots] = useState<BookingSlot[]>([]);
+  const [startDateOffset, setStartDateOffset] = useState<number>(0); // Смещение начальной даты
 
-  // Генерируем даты, начиная с текущей
+  // Генерируем даты с учётом смещения
   const generateDates = () => {
-    const today = new Date(); // Сегодня: 2025-04-13
+    const today = new Date();
     const dates: string[] = [];
     const daysOfWeek = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
     for (let i = 0; i < 3; i++) {
       const date = new Date(today);
-      date.setDate(today.getDate() + i);
+      date.setDate(today.getDate() + startDateOffset + i); // Учитываем смещение
       const day = date.getDate().toString().padStart(2, "0");
       const month = (date.getMonth() + 1).toString().padStart(2, "0");
       const year = date.getFullYear().toString().slice(-2);
@@ -48,6 +49,17 @@ const BookingDay: React.FC<BookingDayProps> = ({ onSelectDateTime, tableId }) =>
     "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00",
     "20:30", "21:00"
   ];
+
+  // Функция для проверки, является ли дата "вчера" или ранее
+  const isDateBeforeToday = (dateStr: string) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Сбрасываем время для корректного сравнения
+
+    const [day, month, year] = dateStr.split(",")[0].split(".").map(Number);
+    const dateToCheck = new Date(2000 + year, month - 1, day);
+
+    return dateToCheck < today;
+  };
 
   // Фильтруем временные слоты, чтобы исключить прошедшее время
   const filterTimeSlots = (date: string) => {
@@ -123,12 +135,56 @@ const BookingDay: React.FC<BookingDayProps> = ({ onSelectDateTime, tableId }) =>
     });
   };
 
+  // Обработчики для кнопок "вверх" и "вниз"
+  const handlePreviousDay = () => {
+    const newOffset = startDateOffset - 1;
+    // Проверяем, чтобы самая ранняя дата не была раньше "сегодня"
+    const earliestDate = dates[0]; // Текущая самая ранняя дата
+    const newEarliestDateStr = generateDatesForOffset(newOffset)[0]; // Самая ранняя дата после смещения
+    if (!isDateBeforeToday(newEarliestDateStr)) {
+      setStartDateOffset(newOffset);
+      // Если выбранная дата больше недоступна, сбрасываем выбор
+      if (selectedDate && isDateBeforeToday(selectedDate)) {
+        setSelectedDate(null);
+        setSelectedTime(null);
+      }
+    }
+  };
+
+  const handleNextDay = () => {
+    setStartDateOffset((prev) => prev + 1);
+  };
+
+  // Вспомогательная функция для проверки дат при смещении
+  const generateDatesForOffset = (offset: number) => {
+    const today = new Date();
+    const dates: string[] = [];
+    const daysOfWeek = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
+    for (let i = 0; i < 3; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + offset + i);
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear().toString().slice(-2);
+      const dayOfWeek = daysOfWeek[date.getDay()];
+      dates.push(`${day}.${month}.${year}, ${dayOfWeek}`);
+    }
+
+    return dates;
+  };
+
   return (
     <div className="booking-day">
       <h2>Выберите дату и время</h2>
       <div className="datePickingArea">
         <div className="DatePicking">
-          <button className="arrow" aria-label="Прокрутить вверх" />
+          <button
+            className="arrow"
+            aria-label="Прокрутить вверх"
+            onClick={handlePreviousDay}
+            disabled={isDateBeforeToday(generateDatesForOffset(startDateOffset - 1)[0])}
+          />
           <div className="Calendar">
             {dates.map((date) => (
               <button
@@ -140,7 +196,11 @@ const BookingDay: React.FC<BookingDayProps> = ({ onSelectDateTime, tableId }) =>
               </button>
             ))}
           </div>
-          <button className="arrow-reverse" aria-label="Прокрутить вниз" />
+          <button
+            className="arrow-reverse"
+            aria-label="Прокрутить вниз"
+            onClick={handleNextDay}
+          />
         </div>
         {selectedDate && (
           <div className="TimePicking">

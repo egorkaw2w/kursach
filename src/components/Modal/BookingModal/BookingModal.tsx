@@ -5,6 +5,7 @@ import BookingDay from "../BookingDay/BookingDay";
 import BookingDuration from "../BookingDuration/BookingDuration";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../app/lib/AuthContext"; // Импортируем хук useAuth
 
 const API_URL = "http://strhzy.ru:8080/api";
 
@@ -28,13 +29,12 @@ const BookingModal: React.FC<BookingModalProps> = ({
   setNotification,
   onComplete,
 }) => {
+  const { userId } = useAuth(); // Получаем userId из контекста авторизации
   const [step, setStep] = useState<number>(1);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
   const [comment, setComment] = useState<string>("");
-
-  const userId = 1; // Временная заглушка для userId
 
   const handleSelectDateTime = (date: string, time: string) => {
     console.log("Date and time selected:", { date, time });
@@ -61,14 +61,20 @@ const BookingModal: React.FC<BookingModalProps> = ({
       comment,
     });
 
-    if (!selectedDate || !selectedTime || !selectedDuration || !userId) {
+    // Проверка авторизации
+    if (!userId) {
+      console.log("User is not authenticated");
+      toast.error("Пожалуйста, авторизуйтесь, чтобы забронировать столик");
+      return;
+    }
+
+    if (!selectedDate || !selectedTime || !selectedDuration) {
       const missingFields = [];
       if (!selectedDate) missingFields.push("selectedDate");
       if (!selectedTime) missingFields.push("selectedTime");
       if (!selectedDuration) missingFields.push("selectedDuration");
-      if (!userId) missingFields.push("userId");
       console.log("Missing required fields:", missingFields);
-      toast.error("Пожалуйста, авторизуйтесь и выберите все данные для бронирования");
+      toast.error("Пожалуйста, выберите все данные для бронирования");
       return;
     }
 
@@ -127,7 +133,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
       const requestData = {
         tableId: table.id,
-        userId: userId,
+        userId: userId, // Используем userId из контекста
         reservationTime: reservationTime.toISOString(),
         durationMinutes: durationMinutes,
         comment: comment || null,

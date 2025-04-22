@@ -29,9 +29,9 @@ const HallModal: React.FC<HallModalProps> = ({ isOpen, onClose, setNotification 
 
   // Захардкодим координаты для столов, используя имена из базы данных
   const tableCoordinates: { [key: string]: { x: number; y: number } } = {
-    "A-1": { x: 100, y: 100 },
-    "A-2": { x: 200, y: 150 },
-    "B-1": { x: 300, y: 200 },
+    "A-1": { x: 200, y: 180 },
+    "A-2": { x: 200, y: 230 },
+    "B-1": { x: 200, y: 280 },
   };
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const HallModal: React.FC<HallModalProps> = ({ isOpen, onClose, setNotification 
             ctx.arc(table.x, table.y, 10, 0, Math.PI * 2);
             ctx.fillStyle = "red";
             ctx.fill();
-            ctx.fillStyle = "black";
+            ctx.fillStyle = "white";
             ctx.font = "16px Arial";
             ctx.fillText(table.name, table.x - 10, table.y - 15);
           }

@@ -41,7 +41,6 @@ const Register = () => {
 
     const { login, firstName, lastName, middleName, birthDate, phone, email, password, confirmPassword } = formData;
 
-    // Локальная валидация
     if (!login || !firstName || !lastName || !middleName || !birthDate || !phone || !email || !password || !confirmPassword) {
       setError("Все поля должны быть заполнены!");
       setLoading(false);
