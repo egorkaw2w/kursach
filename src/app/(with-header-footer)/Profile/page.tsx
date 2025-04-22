@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import "./profile.scss";
 import Link from "next/link";
 import { useAuth } from "src/app/lib/AuthContext";
+import axios from "axios";
 
 const Profile = () => {
   const { user, userId, isAuthReady } = useAuth();
@@ -13,13 +14,20 @@ const Profile = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    name: user?.fullName || "Неизвестный пользователь",
     DOB: "",
     mail: "",
     img: "",
+    roleId: null as number | null,
+    roleName: "",
+    login: "", // Добавляем login
+    phone: "", // Добавляем phone
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imgError, setImgError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newImageUrl, setNewImageUrl] = useState("");
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -32,34 +40,44 @@ const Profile = () => {
       try {
         setLoading(true);
         console.log(`Fetching profile data for userId: ${userId}`);
-        const response = await fetch(`http://strhzy.ru:8080/api/users/${userId}`, {
-          method: "GET",
+        const response = await axios.get(`http://strhzy.ru:8080/api/users/${userId}`, {
           headers: {
             "Content-Type": "application/json",
           },
         });
 
         console.log("Fetch response status:", response.status);
-        const responseText = await response.text();
-        console.log("Response text:", responseText);
+        console.log("Response data:", response.data);
 
-        if (response.ok) {
-          const parsedResponse = JSON.parse(responseText);
-          const data = parsedResponse.data; // Данные внутри data
-          console.log("Profile data loaded:", data);
-          setFormData({
-            name: data.fullName || "",
-            DOB: data.birthDate || "", // Используем birthDate вместо dob
-            mail: data.email || "",
-            img: data.avatarUrl || "", // Используем avatarUrl вместо img
-          });
-        } else {
-          const errorData = JSON.parse(responseText);
-          setError(errorData.error || "Не удалось загрузить данные профиля.");
+        const data = response.data.data || response.data;
+
+        if (!data || typeof data !== "object") {
+          throw new Error("Данные пользователя не найдены в ответе сервера.");
         }
-      } catch (err) {
+
+        console.log("Profile data loaded:", data);
+        setFormData({
+          name: data.fullName || user.fullName || "Неизвестный пользователь",
+          DOB: data.birthDate || "",
+          mail: data.email || "",
+          img: data.avatarUrl || "",
+          roleId: data.roleId || null,
+          roleName: data.roleName || "",
+          login: data.login || "", // Сохраняем login
+          phone: data.phone || "", // Сохраняем phone
+        });
+      } catch (err: any) {
         console.error("Fetch error:", err);
-        setError("Ошибка при загрузке данных.");
+        let errorMessage = "Ошибка при загрузке данных.";
+        if (err.response) {
+          console.log("Error response data:", err.response.data);
+          errorMessage = err.response.data.error || errorMessage;
+        } else if (err.request) {
+          errorMessage = "Сервер не отвечает. Проверьте подключение.";
+        } else {
+          errorMessage = err.message || errorMessage;
+        }
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -68,7 +86,7 @@ const Profile = () => {
     if (isAuthReady) {
       fetchProfileData();
     }
-  }, [user, userId, isAuthReady]);
+  }, [userId, isAuthReady]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -81,37 +99,107 @@ const Profile = () => {
       return;
     }
 
+    // Валидация email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.mail)) {
+      setError("Пожалуйста, введите корректный email.");
+      return;
+    }
+
+    // Валидация birthDate (только на будущую дату)
+    if (formData.DOB) {
+      const today = new Date();
+      const birthDate = new Date(formData.DOB);
+      if (birthDate > today) {
+        setError("Дата рождения не может быть в будущем.");
+        return;
+      }
+    }
+
     try {
       setError(null);
-      console.log("Saving profile data:", formData);
-      const response = await fetch(`http://strhzy.ru:8080/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: userId,
-          fullName: formData.name,
-          birthDate: formData.DOB, // Используем birthDate
-          email: formData.mail,
-          avatarUrl: formData.img, // Используем avatarUrl
-        }),
-      });
+      const payload = {
+        id: userId,
+        fullName: formData.name,
+        birthDate: formData.DOB || null,
+        email: formData.mail,
+        avatarUrl: formData.img || null,
+        roleId: formData.roleId,
+        roleName: formData.roleName,
+        login: formData.login, // Добавляем login
+        phone: formData.phone, // Добавляем phone
+      };
+      console.log("Saving profile data:", payload);
+
+      const response = await axios.put(`http://strhzy.ru:8080/api/users/${userId}`, payload);
 
       console.log("Save response status:", response.status);
-      const responseText = await response.text();
-      console.log("Save response text:", responseText);
+      console.log("Save response data:", response.data);
 
-      if (response.ok) {
-        setIsEditing(false);
-      } else {
-        const errorData = JSON.parse(responseText);
-        setError(errorData.error || "Не удалось обновить профиль.");
-      }
-    } catch (err) {
+      setIsEditing(false);
+    } catch (err: any) {
       console.error("Save error:", err);
-      setError("Ошибка при сохранении данных.");
+      let errorMessage = "Ошибка при сохранении данных.";
+      if (err.response) {
+        console.log("Error response data:", err.response.data);
+        if (err.response.data.errors) {
+          const errors = err.response.data.errors;
+          console.log("Validation errors:", errors);
+          const errorFields = [];
+          if (errors.Email) {
+            errorFields.push(`Email: ${errors.Email[0]}`);
+          }
+          if (errors.BirthDate) {
+            errorFields.push(`Дата рождения: ${errors.BirthDate[0]}`);
+          }
+          if (errors.FullName) {
+            errorFields.push(`Имя: ${errors.FullName[0]}`);
+          }
+          if (errors.AvatarUrl) {
+            errorFields.push(`URL аватара: ${errors.AvatarUrl[0]}`);
+          }
+          if (errors.RoleId) {
+            errorFields.push(`Роль: ${errors.RoleId[0]}`);
+          }
+          if (errors.Login) {
+            errorFields.push(`Логин: ${errors.Login[0]}`);
+          }
+          if (errors.Phone) {
+            errorFields.push(`Телефон: ${errors.Phone[0]}`);
+          }
+          if (errorFields.length > 0) {
+            errorMessage = errorFields.join("; ");
+          } else {
+            errorMessage = JSON.stringify(errors);
+          }
+        } else if (err.response.data.error) {
+          errorMessage = err.response.data.error;
+        } else {
+          errorMessage = err.response.data.message || errorMessage;
+        }
+      } else if (err.request) {
+        errorMessage = "Сервер не отвечает. Проверьте подключение.";
+      } else {
+        errorMessage = err.message || errorMessage;
+      }
+      setError(errorMessage);
     }
+  };
+
+  const openModal = () => {
+    setNewImageUrl(formData.img);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setNewImageUrl("");
+  };
+
+  const handleImageChange = () => {
+    setFormData((prev) => ({ ...prev, img: newImageUrl }));
+    setImgError(false);
+    closeModal();
   };
 
   if (!isAuthReady) {
@@ -138,12 +226,25 @@ const Profile = () => {
       <h1 className="col-span-1 md:col-span-2 self-center justify-self-center my-10 text-3xl font-bold">
         Здравствуйте, {formData.name}
       </h1>
-      <div className="Profile__img flex justify-center">
+      <div className="Profile__img flex flex-col items-center">
         <img
-          src={formData.img}
+          src={
+            imgError || !formData.img
+              ? "https://via.placeholder.com/150?text=Avatar"
+              : formData.img
+          }
           alt="profile Img"
           className="w-48 h-48 rounded-full object-cover shadow-lg"
+          onError={() => setImgError(true)}
         />
+        {isEditing && (
+          <button
+            onClick={openModal}
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            Изменить
+          </button>
+        )}
       </div>
       <div className="Profile__data w-full md:w-3/4 mx-auto">
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -158,7 +259,7 @@ const Profile = () => {
               className="border rounded px-2 py-1 dark-input"
             />
           ) : (
-            <p>{formData.DOB}</p>
+            <p>{formData.DOB || "Не указан"}</p>
           )}
         </div>
         <div className="profile__mail flex justify-between items-center py-2">
@@ -172,7 +273,7 @@ const Profile = () => {
               className="border rounded px-2 py-1 dark-input"
             />
           ) : (
-            <p>{formData.mail}</p>
+            <p>{formData.mail || "Не указан"}</p>
           )}
         </div>
         <div className="flex justify-end mt-6">
@@ -193,6 +294,37 @@ const Profile = () => {
           )}
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="modal__overlay fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="modal__content bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              Изменить аватар
+            </h2>
+            <input
+              type="text"
+              placeholder="Введите URL изображения..."
+              value={newImageUrl}
+              onChange={(e) => setNewImageUrl(e.target.value)}
+              className="w-full border rounded px-3 py-2 mb-4 text-gray-900 dark:text-white dark:bg-gray-700 dark:border-gray-600"
+            />
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={closeModal}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleImageChange}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+              >
+                Изменить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
