@@ -48,15 +48,22 @@ const Login = () => {
 
       if (response.ok) {
         const parsedResponse = JSON.parse(responseText);
-        const data = parsedResponse.data; // Используем data с маленькой буквы
+        const data = parsedResponse.data;
         console.log("Login successful, user data:", data);
-        if (!data || !data.id || !data.fullName) {
+        if (!data || !data.id || !data.fullName || !data.roleId) {
           throw new Error("Неверный формат ответа от сервера");
         }
-        login({ fullName: data.fullName }, data.id);
+        login({ fullName: data.fullName }, data.id, data.roleId); // Передаём roleId
         setTimeout(() => {
-          console.log("Redirecting to / after login");
-          router.push("/");
+          console.log("Redirecting after login...");
+          // Перенаправление в зависимости от roleId
+          if (data.roleId === 5) {
+            console.log("User is admin (roleId: 5), redirecting to /admin");
+            router.push("/Admin");
+          } else {
+            console.log("User is not admin, redirecting to /");
+            router.push("/");
+          }
         }, 500);
       } else {
         const errorData = JSON.parse(responseText);
