@@ -1,30 +1,101 @@
-.Admimka{
-    display: grid;
-    grid-template-columns: 2fr 10fr;
-    height: 100vh;
-    max-height: 100vh;
+.Adminka {
+  display: flex;
+  height: 100vh;
+  background-color: #f3f4f6; // Светлый фон для всей страницы
 }
-.Adminka-content{
-    background-color: white;
-    background-clip: content-box;
-    display: grid;
-    grid-template-rows: 1fr 9fr;
+
+.Adminka-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background-color: #f3f4f6;
+  overflow-y: auto;
 }
-.Adminka-content__title{
-    color: black;
-    border: 1px solid #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(158, 158, 158, 0.24);
-    font-size: 24px;
+
+.Adminka-content__title {
+  color: #1f2937; // Тёмно-серый текст
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
 }
-.Adminka-content__table{
-    border: 1px solid #000;
-    border-top: transparent;
-    color: #000;
-    overflow-x: scroll;
+
+.Adminka-content__table {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  overflow-x: auto;
 }
-.admin-table-header{
-    display: grid;
+
+.admin-table-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); // Адаптивные столбцы
+  gap: 16px;
+  padding: 16px;
+  background-color: #f9fafb; // Светлый фон для заголовков
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 600;
+  color: #374151; // Тёмно-серый текст для заголовков
+  text-align: left;
+}
+
+.header-item {
+  padding: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.AddBtn {
+  background-color: #2563eb; // Синий цвет для кнопки
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.AddBtn:hover {
+  background-color: #1d4ed8; // Темнее при наведении
+}
+
+.AddForm {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.AddForm input,
+.AddForm select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.AddForm button {
+  background-color: #16a34a; // Зелёный цвет для кнопки сохранения
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.AddForm button:hover {
+  background-color: #15803d; // Темнее при наведении
 }

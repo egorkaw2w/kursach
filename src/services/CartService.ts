@@ -168,7 +168,7 @@ export const getUserAddresses = async (userId: number) => {
 export const addAddress = async (
   userId: number,
   addressText: string,
-  isDefault: boolean = думатьfalse
+  isDefault: boolean = false
 ) => {
   try {
     const response = await axios.post(`${API_URL}/Addresses`, {

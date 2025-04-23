@@ -1,4 +1,3 @@
-// src/components/Admin.tsx
 'use client';
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -189,42 +188,51 @@ const Admin = () => {
   console.log("Headers for table:", headers);
 
   return (
-    <div className="Adminka flex gap-5">
+    <div className="Adminka flex h-screen">
       <SideNavBar
-        className="w-64" // Фиксированная ширина для бокового меню
+        className="w-64 bg-gray-800 text-white"
         navElement={navItems}
         onNavClick={handleNavClick}
       />
-      <div className="Adminka-content flex-1 p-10">
-        <div className="Adminka-content__title">{title}</div>
+      <div className="Adminka-content flex-1 p-6 bg-gray-100">
+        <div className="Adminka-content__title text-2xl font-bold text-gray-800 bg-white p-4 rounded-lg shadow mb-6 text-center">
+          {title}
+        </div>
         {(title === "Меню" || title === "Мероприятия") && (
-          <button onClick={() => setShowAddForm(!showAddForm)} className="AddBtn">
+          <button 
+            onClick={() => setShowAddForm(!showAddForm)} 
+            className="AddBtn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition mb-4"
+          >
             {showAddForm ? "Отмена" : `Добавить ${title === "Меню" ? "позицию" : "событие"}`}
           </button>
         )}
         {showAddForm && title === "Меню" && (
-          <div className="AddForm">
+          <div className="AddForm bg-white p-6 rounded-lg shadow mb-6">
             <input
               type="text"
               placeholder="Название"
               value={newItem.name ?? ""}
               onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+              className="w-full p-2 mb-4 border rounded-lg"
             />
             <input
               type="text"
               placeholder="Описание"
               value={newItem.description ?? ""}
               onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+              className="w-full p-2 mb-4 border rounded-lg"
             />
             <input
               type="number"
               placeholder="Цена"
               value={newItem.price ?? 0}
               onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })}
+              className="w-full p-2 mb-4 border rounded-lg"
             />
             <select
               value={newItem.categoryId ?? 0}
               onChange={(e) => setNewItem({ ...newItem, categoryId: parseInt(e.target.value) || 0 })}
+              className="w-full p-2 mb-4 border rounded-lg"
             >
               <option value={0}>Выберите категорию</option>
               {categories.map(cat => (
@@ -236,40 +244,54 @@ const Admin = () => {
               placeholder="Ссылка на изображение"
               value={newItem.imageUrl ?? ""}
               onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
+              className="w-full p-2 mb-4 border rounded-lg"
             />
-            <button onClick={handleAddItem}>Сохранить</button>
+            <button 
+              onClick={handleAddItem}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            >
+              Сохранить
+            </button>
           </div>
         )}
         {showAddForm && title === "Мероприятия" && (
-          <div className="AddForm">
+          <div className="AddForm bg-white p-6 rounded-lg shadow mb-6">
             <input
               type="text"
               placeholder="Название"
               value={newEvent.title ?? ""}
               onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+              className="w-full p-2 mb-4 border rounded-lg"
             />
             <input
               type="text"
               placeholder="Описание"
               value={newEvent.description ?? ""}
               onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+              className="w-full p-2 mb-4 border rounded-lg"
             />
             <input
               type="text"
               placeholder="Ссылка на изображение"
               value={newEvent.imageUrl ?? ""}
               onChange={(e) => setNewEvent({ ...newEvent, imageUrl: e.target.value })}
+              className="w-full p-2 mb-4 border rounded-lg"
             />
-            <button onClick={handleAddEvent}>Сохранить</button>
+            <button 
+              onClick={handleAddEvent}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            >
+              Сохранить
+            </button>
           </div>
         )}
-        <div className="Adminka-content__table p-10">
-          {loading && <div>Загрузка...</div>}
-          {error && <div>{error}</div>}
+        <div className="Adminka-content__table bg-white rounded-lg shadow p-6">
+          {loading && <div className="text-gray-600">Загрузка...</div>}
+          {error && <div className="text-red-600">{error}</div>}
           {!loading && !error && Array.isArray(tableData) && headers.length > 0 && (
-            <div className={`admin-table-header grid-cols-${headers.length + 1}`}>
+            <div className="admin-table-header">
               {headers.map((header, index) => (
-                <div key={index} className="grid-item header-item">
+                <div key={index} className="header-item">
                   {header === "name" ? "Название" :
                    header === "description" ? "Описание" :
                    header === "price" ? "Цена" :
@@ -282,7 +304,7 @@ const Admin = () => {
                    header === "avatarUrl" ? "Аватар" : header}
                 </div>
               ))}
-              <div className="grid-item header-item justify-self-center">Действия</div>
+              <div className="header-item justify-self-center">Действия</div>
             </div>
           )}
           {!loading && !error && Array.isArray(tableData) && tableData.length > 0 ? (
@@ -296,7 +318,7 @@ const Admin = () => {
               />
             ))
           ) : (
-            !loading && !error && <div>Нет данных для отображения</div>
+            !loading && !error && <div className="text-gray-600">Нет данных для отображения</div>
           )}
         </div>
       </div>
