@@ -46,7 +46,7 @@ const Header = ({ className }: HeaderProps) => {
               <BurgerIco typeOfBurger={true} />
             </button>
           </div>
-          <Link href="/" className="flex justify-center items-end flex-1">
+          <Link href="/" className="logoLink flex justify-center items-end flex-1">
             <Logo className="logo" />
           </Link>
           <div className="hidden md:flex flex-col justify-start items-start relative">

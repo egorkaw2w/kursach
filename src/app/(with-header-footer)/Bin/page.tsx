@@ -1,4 +1,3 @@
-// src/components/Bin/Bin.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -75,7 +74,7 @@ const Bin = () => {
   };
 
   const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.quantity * item.menuItemPrice, // Используем menuItemPrice вместо menuItem.price
+    (sum, item) => sum + item.quantity * item.menuItemPrice,
     0
   );
 
@@ -93,14 +92,14 @@ const Bin = () => {
             {cartItems.map((item) => (
               <BinItem
                 key={item.id}
-                GoodName={item.menuItemName} // menuItemName вместо menuItem.name
-                GoodDesc={item.menuItemDescription || "Без описания"} // Если API возвращает description
+                GoodName={item.menuItemName}
+                GoodDesc={item.menuItemDescription || "Без описания"}
                 GoodImg={
-                  item.menuItemId
-                    ? `http://strhzy.ru:8080/api/MenuItems/image/${item.menuItemId}`
+                  item.imageUrl && item.imageUrl !== ""
+                    ? item.imageUrl
                     : "/usable_img/default-food.png"
                 }
-                GoodPrice={(item.menuItemPrice * item.quantity).toFixed(2)} // menuItemPrice
+                GoodPrice={(item.menuItemPrice * item.quantity).toFixed(2)}
                 Quantity={item.quantity}
                 onRemove={() => removeItem(item.id)}
                 onIncrease={() => updateQuantity(item.id, item.quantity + 1)}

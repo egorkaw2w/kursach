@@ -16,6 +16,8 @@ interface CartItem {
   menuItemId: number;
   menuItemName: string;
   menuItemPrice: number;
+  menuItemDescription?: string;
+  imageUrl?: string; // Добавляем imageUrl
   quantity: number;
   createdAt: string;
 }
@@ -52,7 +54,27 @@ export const getOrCreateCart = async (userId: number): Promise<Cart> => {
 export const getCartItems = async (cartId: number): Promise<CartItem[]> => {
   try {
     const response = await axios.get(`${API_URL}/CartItems?cartId=${cartId}`);
-    return response.data;
+    const cartItems = response.data;
+
+    // Для каждого CartItem запрашиваем MenuItem, чтобы получить imageUrl
+    const enrichedItems = await Promise.all(
+      cartItems.map(async (item: CartItem) => {
+        try {
+          const menuItemResponse = await axios.get(`${API_URL}/MenuItems/${item.menuItemId}`);
+          const menuItem = menuItemResponse.data;
+          return {
+            ...item,
+            imageUrl: menuItem.imageUrl || "", // Добавляем imageUrl из MenuItems
+            menuItemDescription: menuItem.description || "", // Если description тоже нужен
+          };
+        } catch (error) {
+          console.error(`Ошибка получения MenuItem для menuItemId ${item.menuItemId}:`, error);
+          return { ...item, imageUrl: "", menuItemDescription: "" }; // Fallback
+        }
+      })
+    );
+
+    return enrichedItems;
   } catch (error) {
     console.error("Ошибка получения товаров корзины:", error);
     throw error;
@@ -146,7 +168,7 @@ export const getUserAddresses = async (userId: number) => {
 export const addAddress = async (
   userId: number,
   addressText: string,
-  isDefault: boolean = false
+  isDefault: boolean = думатьfalse
 ) => {
   try {
     const response = await axios.post(`${API_URL}/Addresses`, {

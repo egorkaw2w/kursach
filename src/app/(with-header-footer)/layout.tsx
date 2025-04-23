@@ -30,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>{children}</main>
           {/* <Footer/> */}
           <ToastContainer />
+          <Footer/>
         </AuthProvider>
       </body>
     </html>
