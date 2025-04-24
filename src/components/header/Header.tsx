@@ -90,7 +90,7 @@ const Header = ({ className }: HeaderProps) => {
                 <button className="loca-date-item p-0 m-0">Авторизоваться</button>
               </Link>
             )}
-            <div className="loca-date-item p-0 m-0">адрес: место, город</div>
+            <div className="loca-date-item p-0 m-0">адрес: ул.Чукотки, д.24</div>
           </div>
         </div>
       </div>

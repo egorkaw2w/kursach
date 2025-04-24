@@ -108,8 +108,10 @@ const Register = () => {
 
   return (
     <main className="Register container mx-auto justify-center items-center min-h-screen flex flex-col">
-      <Logo className="mb-6" />
-      <h1 className="title">Регистрация</h1>
+<Link href={"/"}>
+        <Logo className="mb-6" />
+  
+</Link >      <h1 className="title">Регистрация</h1>
       <div className="RegisterArea flex flex-col justify-center items-center gap-4">
         <form onSubmit={handleSubmit}>
           {/* Уведомления */}

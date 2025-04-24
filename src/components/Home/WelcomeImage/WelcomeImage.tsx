@@ -15,7 +15,7 @@ const WelcomeImage: React.FC = () => {
           <nav className="w-2/3 flex p-0 justify-center mx-auto">
             <ul className="Welcome-items flex justify-between p-0 items-center gap-10">
               <li className="Welcome-item">
-                <Link href="" className="Welcome-link px-11 py-3">
+                <Link href="/Menu" className="Welcome-link px-11 py-3">
                   Доставка
                 </Link>
               </li>

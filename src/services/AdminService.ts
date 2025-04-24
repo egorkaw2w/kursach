@@ -1,4 +1,3 @@
-// src/services/AdminService.ts
 import axios from "axios";
 
 const API_URL = "http://strhzy.ru:8080/api";
@@ -22,11 +21,15 @@ export interface EventDTO {
 
 export interface UserDTO {
   id: number;
+  login: string;
   fullName: string;
+  birthDate: string | null;
+  phone: string;
   email: string;
   avatarUrl: string | null;
   roleId: number;
   roleName: string;
+  createdAt: string;
 }
 
 export interface CategoryDTO {
@@ -120,62 +123,174 @@ export const getRoles = async (): Promise<RoleDTO[]> => {
 };
 
 export const createMenuItem = async (data: Partial<MenuItemDTO>): Promise<void> => {
-  await axios.post(`${API_URL}/MenuItems`, {
-    Id: data.id || 0,
-    Name: data.name || "",
-    Description: data.description || "",
-    Price: data.price || 0,
-    CategoryId: data.categoryId || 0,
-    ImageUrl: data.imageUrl || "",
-  });
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.post(
+      `${API_URL}/MenuItems`,
+      {
+        Id: data.id || 0,
+        Name: data.name || "",
+        Description: data.description || "",
+        Price: data.price || 0,
+        CategoryId: data.categoryId || 0,
+        ImageUrl: data.imageUrl || "",
+      },
+      config
+    );
+    console.log("Successfully created MenuItem:", data);
+  } catch (err) {
+    console.error("Error in createMenuItem:", err);
+    throw err;
+  }
 };
 
 export const updateMenuItem = async (id: number, data: Partial<MenuItemDTO>): Promise<void> => {
-  await axios.put(`${API_URL}/MenuItems/${id}`, {
-    Id: id,
-    CategoryId: data.categoryId || 0,
-    Name: data.name || "",
-    Description: data.description || "",
-    Price: data.price || 0,
-    ImageUrl: data.imageUrl || "",
-  });
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.put(
+      `${API_URL}/MenuItems/${id}`,
+      {
+        Id: id,
+        CategoryId: data.categoryId || 0,
+        Name: data.name || "",
+        Description: data.description || "",
+        Price: data.price || 0,
+        ImageUrl: data.imageUrl || "",
+      },
+      config
+    );
+    console.log(`Successfully updated MenuItem with id: ${id}`);
+  } catch (err) {
+    console.error(`Error in updateMenuItem with id: ${id}`, err);
+    throw err;
+  }
 };
 
 export const deleteMenuItem = async (id: number): Promise<void> => {
-  await axios.delete(`${API_URL}/MenuItems/${id}`);
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.delete(`${API_URL}/MenuItems/${id}`, config);
+    console.log(`Successfully deleted MenuItem with id: ${id}`);
+  } catch (err) {
+    console.error(`Error in deleteMenuItem with id: ${id}`, err);
+    throw err;
+  }
 };
 
 export const createEvent = async (data: Partial<EventDTO>): Promise<void> => {
-  await axios.post(`${API_URL}/Events`, {
-    Title: data.title || "",
-    Description: data.description || "",
-    ImageUrl: data.imageUrl || "",
-  });
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.post(
+      `${API_URL}/Events`,
+      {
+        Title: data.title || "",
+        Description: data.description || "",
+        ImageUrl: data.imageUrl || "",
+      },
+      config
+    );
+    console.log("Successfully created Event:", data);
+  } catch (err) {
+    console.error("Error in createEvent:", err);
+    throw err;
+  }
 };
 
 export const updateEvent = async (id: number, data: Partial<EventDTO>): Promise<void> => {
-  await axios.put(`${API_URL}/Events/${id}`, {
-    Id: id,
-    Title: data.title || "",
-    Description: data.description || "",
-    ImageUrl: data.imageUrl || "",
-  });
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.put(
+      `${API_URL}/Events/${id}`,
+      {
+        Id: id,
+        Title: data.title || "",
+        Description: data.description || "",
+        ImageUrl: data.imageUrl || "",
+      },
+      config
+    );
+    console.log(`Successfully updated Event with id: ${id}`);
+  } catch (err) {
+    console.error(`Error in updateEvent with id: ${id}`, err);
+    throw err;
+  }
 };
 
 export const deleteEvent = async (id: number): Promise<void> => {
-  await axios.delete(`${API_URL}/Events/${id}`);
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.delete(`${API_URL}/Events/${id}`, config);
+    console.log(`Successfully deleted Event with id: ${id}`);
+  } catch (err) {
+    console.error(`Error in deleteEvent with id: ${id}`, err);
+    throw err;
+  }
+};
+
+export const createUser = async (data: Partial<UserDTO>): Promise<void> => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.post(
+      `${API_URL}/Users`,
+      {
+        Login: data.login || "",
+        FullName: data.fullName || "",
+        BirthDate: data.birthDate || null,
+        Phone: data.phone || "",
+        Email: data.email || "",
+        AvatarUrl: data.avatarUrl || null,
+        RoleId: data.roleId || 0,
+        PasswordHash: data.password || "", // Сервер ожидает PasswordHash
+      },
+      config
+    );
+    console.log("Successfully created User:", data);
+  } catch (err) {
+    console.error("Error in createUser:", err);
+    throw err;
+  }
 };
 
 export const updateUser = async (id: number, data: Partial<UserDTO>): Promise<void> => {
-  await axios.put(`${API_URL}/Users/${id}`, {
-    Id: id,
-    FullName: data.fullName || "",
-    Email: data.email || "",
-    AvatarUrl: data.avatarUrl || "",
-    RoleId: data.roleId || 0,
-  });
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.put(
+      `${API_URL}/Users/${id}`,
+      {
+        Id: id,
+        Login: data.login || "",
+        FullName: data.fullName || "",
+        BirthDate: data.birthDate || null,
+        Phone: data.phone || "",
+        Email: data.email || "",
+        AvatarUrl: data.avatarUrl || null,
+        RoleId: data.roleId || 0,
+      },
+      config
+    );
+    console.log(`Successfully updated User with id: ${id}`);
+  } catch (err) {
+    console.error(`Error in updateUser with id: ${id}`, err);
+    throw err;
+  }
 };
 
 export const deleteUser = async (id: number): Promise<void> => {
-  await axios.delete(`${API_URL}/Users/${id}`);
+  try {
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    await axios.delete(`${API_URL}/Users/${id}`, config);
+    console.log(`Successfully deleted User with id: ${id}`);
+  } catch (err) {
+    console.error(`Error in deleteUser with id: ${id}`, err);
+    throw err;
+  }
 };

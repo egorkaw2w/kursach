@@ -79,7 +79,9 @@ const Login = () => {
 
   return (
     <main className="Login flexc flex-col">
-      <Logo className="" />
+<Link href = "/">
+        <Logo className="" />
+</Link >
       <h1 className="title">Авторизация</h1>
       <div className="LoginArea flex justify-center items-center">
         <form onSubmit={handleSubmit}>

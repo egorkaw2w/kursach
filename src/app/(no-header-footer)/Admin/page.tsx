@@ -5,7 +5,21 @@ import * as XLSX from "xlsx";
 import "./Admin.scss";
 import AdminTableItem from "@components/AdminTableItem/AdminTableItem";
 import SideNavBar from "@components/SideNavBar/SideNavBar";
-import { getMenuItems, getEvents, getUsers, MenuItemDTO, EventDTO, UserDTO, CategoryDTO, getCategories, createEvent, createMenuItem } from "src/services/AdminService";
+import {
+  getMenuItems,
+  getEvents,
+  getUsers,
+  getCategories,
+  getRoles,
+  createMenuItem,
+  createEvent,
+  createUser,
+  MenuItemDTO,
+  EventDTO,
+  UserDTO,
+  CategoryDTO,
+  RoleDTO,
+} from "src/services/AdminService";
 
 const API_URL = "http://strhzy.ru:8080/api";
 
@@ -24,7 +38,17 @@ const Admin = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newItem, setNewItem] = useState({ name: "", description: "", price: 0, categoryId: 0, imageUrl: "" });
   const [newEvent, setNewEvent] = useState({ title: "", description: "", imageUrl: "" });
+  const [newUser, setNewUser] = useState({
+    login: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    avatarUrl: "",
+    roleId: 0,
+  });
   const [categories, setCategories] = useState<CategoryDTO[]>([]);
+  const [roles, setRoles] = useState<RoleDTO[]>([]);
 
   console.log("Admin rendering...");
 
@@ -32,10 +56,12 @@ const Admin = () => {
     const loadInitialData = async () => {
       setLoading(true);
       try {
-        console.log("Loading categories...");
-        const cats = await getCategories();
+        console.log("Loading categories and roles...");
+        const [cats, roleData] = await Promise.all([getCategories(), getRoles()]);
         console.log("Categories loaded:", cats);
+        console.log("Roles loaded:", roleData);
         setCategories(cats);
+        setRoles(roleData);
         await fetchData("Меню");
       } catch (err: any) {
         console.error("Error in loadInitialData:", err);
@@ -94,7 +120,6 @@ const Admin = () => {
         return;
       }
 
-      // Подготовка данных для Excel
       const data = orders.map((order: any) => ({
         ID: order.id,
         Пользователь: order.user.fullName,
@@ -108,28 +133,23 @@ const Admin = () => {
           .join("\n"),
       }));
 
-      // Создаём рабочий лист
       const ws = XLSX.utils.json_to_sheet(data, {
         header: ["ID", "Пользователь", "Email", "Адрес", "Статус", "Стоимость", "Дата", "Товары"],
       });
 
-      // Настраиваем ширину столбцов
       ws["!cols"] = [
-        { wch: 10 }, // ID
-        { wch: 20 }, // Пользователь
-        { wch: 30 }, // Email
-        { wch: 30 }, // Адрес
-        { wch: 15 }, // Статус
-        { wch: 15 }, // Стоимость
-        { wch: 15 }, // Дата
-        { wch: 40 }, // Товары
+        { wch: 10 },
+        { wch: 20 },
+        { wch: 30 },
+        { wch: 30 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 40 },
       ];
 
-      // Создаём рабочую книгу
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Заказы");
-
-      // Генерируем и скачиваем файл
       XLSX.writeFile(wb, "orders_history.xlsx");
 
       console.log("Orders exported to Excel successfully");
@@ -182,14 +202,32 @@ const Admin = () => {
     }
   };
 
-  const headers = Array.isArray(tableData) && tableData.length > 0 
-    ? Object.keys(tableData[0]).filter(h => h !== "id" && h !== "categoryId" && h !== "roleId") 
+  const handleAddUser = async () => {
+    if (!newUser.login || !newUser.fullName || !newUser.email || !newUser.phone || !newUser.password || !newUser.roleId) {
+      setError("Все поля, кроме аватара, обязательны");
+      return;
+    }
+    try {
+      console.log("Creating new user:", newUser);
+      await createUser(newUser);
+      setNewUser({ login: "", fullName: "", email: "", phone: "", password: "", avatarUrl: "", roleId: 0 });
+      setShowAddForm(false);
+      fetchData("Сотрудники");
+    } catch (err: any) {
+      console.error("Error in handleAddUser:", err);
+      setError("Ошибка добавления сотрудника: " + (err.response?.data?.title || err.message || "Неизвестная ошибка"));
+    }
+  };
+
+  const headers = Array.isArray(tableData) && tableData.length > 0
+    ? Object.keys(tableData[0]).filter(h => h !== "id" && h !== "categoryId" && h !== "roleId")
     : [];
   console.log("Headers for table:", headers);
 
   return (
     <div className="Adminka flex h-screen">
       <SideNavBar
+<<<<<<< Updated upstream
         className="w-64 bg-gray-800 text-white"
         navElement={navItems}
         onNavClick={handleNavClick}
@@ -206,6 +244,17 @@ const Admin = () => {
             {showAddForm ? "Отмена" : `Добавить ${title === "Меню" ? "позицию" : "событие"}`}
           </button>
         )}
+=======
+        className="w-64"
+        navElement={navItems}
+        onNavClick={handleNavClick}
+      />
+      <div className="Adminka-content flex-1 p-10">
+        <div className="Adminka-content__title">{title}</div>
+        <button onClick={() => setShowAddForm(!showAddForm)} className="AddBtn">
+          {showAddForm ? "Отмена" : `Добавить ${title === "Меню" ? "позицию" : title === "Мероприятия" ? "событие" : "сотрудника"}`}
+        </button>
+>>>>>>> Stashed changes
         {showAddForm && title === "Меню" && (
           <div className="AddForm bg-white p-6 rounded-lg shadow mb-6">
             <input
@@ -285,9 +334,65 @@ const Admin = () => {
             </button>
           </div>
         )}
+<<<<<<< Updated upstream
         <div className="Adminka-content__table bg-white rounded-lg shadow p-6">
           {loading && <div className="text-gray-600">Загрузка...</div>}
           {error && <div className="text-red-600">{error}</div>}
+=======
+        {showAddForm && title === "Сотрудники" && (
+          <div className="AddForm">
+            <input
+              type="text"
+              placeholder="Логин"
+              value={newUser.login ?? ""}
+              onChange={(e) => setNewUser({ ...newUser, login: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Полное имя"
+              value={newUser.fullName ?? ""}
+              onChange={(e) => setNewUser({ ...newUser, fullName: e.target.value })}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={newUser.email ?? ""}
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Телефон"
+              value={newUser.phone ?? ""}
+              onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+            />
+            <input
+              type="password"
+              placeholder="Пароль"
+              value={newUser.password ?? ""}
+              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Ссылка на аватар (опционально)"
+              value={newUser.avatarUrl ?? ""}
+              onChange={(e) => setNewUser({ ...newUser, avatarUrl: e.target.value })}
+            />
+            <select
+              value={newUser.roleId ?? 0}
+              onChange={(e) => setNewUser({ ...newUser, roleId: parseInt(e.target.value) || 0 })}
+            >
+              <option value={0}>Выберите роль</option>
+              {roles.map(role => (
+                <option key={role.id} value={role.id}>{role.name}</option>
+              ))}
+            </select>
+            <button onClick={handleAddUser}>Сохранить</button>
+          </div>
+        )}
+        <div className="Adminka-content__table p-10">
+          {loading && <div>Загрузка...</div>}
+          {error && <div>{error}</div>}
+>>>>>>> Stashed changes
           {!loading && !error && Array.isArray(tableData) && headers.length > 0 && (
             <div className="admin-table-header">
               {headers.map((header, index) => (
@@ -298,10 +403,14 @@ const Admin = () => {
                    header === "categoryName" ? "Категория" :
                    header === "title" ? "Название" :
                    header === "imageUrl" ? "Картинка" :
+                   header === "login" ? "Логин" :
                    header === "fullName" ? "Имя" :
-                   header === "roleName" ? "Роль" :
+                   header === "birthDate" ? "Дата рождения" :
+                   header === "phone" ? "Телефон" :
                    header === "email" ? "Email" :
-                   header === "avatarUrl" ? "Аватар" : header}
+                   header === "avatarUrl" ? "Аватар" :
+                   header === "roleName" ? "Роль" :
+                   header === "createdAt" ? "Дата создания" : header}
                 </div>
               ))}
               <div className="header-item justify-self-center">Действия</div>
